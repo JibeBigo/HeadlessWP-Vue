@@ -12,8 +12,8 @@
             </v-toolbar-title>
                   <v-autocomplete cache-items class="mx-3 ml-10" flat hide-no-data hide-details label="Search" solo-inverted></v-autocomplete>
              <v-spacer></v-spacer>
-             <v-btn depressed color="blue darken-3">Home</v-btn>
-             <v-btn depressed color="blue darken-3">About</v-btn>
+             <router-link to="/"><v-btn depressed color="blue darken-3">Home</v-btn></router-link>
+             <router-link to="/about"><v-btn depressed color="blue darken-3">About</v-btn></router-link>
              <v-btn  icon x-large @click="change"><v-avatar color="primary" size="40">YB</v-avatar></v-btn>
              <div>
                  <h1 class="mt-100">Hello</h1>
