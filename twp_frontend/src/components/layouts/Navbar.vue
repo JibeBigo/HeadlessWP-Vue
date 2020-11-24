@@ -15,24 +15,21 @@
              <router-link to="/"><v-btn depressed color="blue darken-3">Home</v-btn></router-link>
              <router-link to="/about"><v-btn depressed color="blue darken-3">About</v-btn></router-link>
              <v-btn  icon x-large @click="change"><v-avatar color="primary" size="40">YB</v-avatar></v-btn>
-             <div>
-                 <h1 class="mt-100">Hello</h1>
-                 <!-- SHOW THE DROP DOWN MENU FOR THE USER -->
-             </div>
+                <div class="container-dropBadge" v-if="isOn">
+                    <v-card  class="d-flex justify-center" color="white">
+                        <v-btn icon x-large><v-avatar color="primary" size="40">YB</v-avatar></v-btn>
+                    </v-card>
+                </div>
         </v-app-bar>
     </nav>
 </template>
 
 <script>
-import {
-  mdiAccount,
-} from '@mdi/js'
 export default {
     name:"NavBar",
 
     data(){
     return{
-        icons:{mdiAccount},
 
         isOn:false,
         }
@@ -41,8 +38,8 @@ export default {
 
     methods:{
         change(){
-        this.isOne =!this.isOne
-        console.log(this.isOne)
+        this.isOn =!this.isOn
+        console.log(this.isOn)
     }
     }
 
@@ -51,4 +48,19 @@ export default {
 </script>
 
 <style>
+.container-dropBadge{
+    position: absolute;
+    right: 0;
+    top:60px;
+    width: 150px;
+    padding-right:10px;
+
+
+}
+
+@media only screen and (min-width: 1399px) {
+  .container-dropBadge{
+       top:	4rem;
+  }
+}
 </style>
