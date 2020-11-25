@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Trello from "./modules/trello"
+import trello from "./modules/trello"
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules:{
-    Trello
+    trello
   }
 })
