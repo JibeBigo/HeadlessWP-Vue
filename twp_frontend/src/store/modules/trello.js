@@ -8,7 +8,7 @@ const state = {
 const actions= {
 
     async fetchCards({commit}){
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+        const response = await axios.get('http://localhost:8000/?rest_route=/wp/v2/categories')
         console.log(response.data)
         commit("setCards", response.data)
     }

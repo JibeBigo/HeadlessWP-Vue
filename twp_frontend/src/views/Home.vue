@@ -1,31 +1,15 @@
 <template>
   <div class="home">
-    <div v-for="card in allCards" :key="card.id">
-      {{card.id}}
-    </div>
+    <ListItems/>
   </div>
 </template>
 
 <script>
-import {mapGetters,mapActions} from "vuex"
+import ListItems from "../components/ListItems"
 export default {
   name: 'Home',
   components: {
+    ListItems
   },
-
-  computed:{
-    ...mapGetters(["allCards"])
-  },
-
-  methods:{
-    ...mapActions(["fetchCards"])
-  },
-
-  created (){
-    this.fetchCards()
-  }
-
-
-
 }
 </script>
