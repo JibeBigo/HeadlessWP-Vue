@@ -1,23 +1,23 @@
 import axios from "axios"
 
 const state = {
-    trello:[],
+    listItems:[],
     user :[]
 };
 
 const actions= {
 
-    async fetchCards({commit}){
+    async fetchListItems({commit}){
         const response = await axios.get('http://localhost:8000/?rest_route=/wp/v2/categories')
         console.log(response.data)
-        commit("setCards", response.data)
+        commit("setListItems", response.data)
     }
 };
 const mutations= {
-    setCards:(state,list) => (state.trello = list)
+    setListItems:(state,list) => (state.listItems = list)
 };
 const getters= {
-    allCards:(state) => state.trello
+    allListItems:(state) => state.listItems
 };
 
 export default{

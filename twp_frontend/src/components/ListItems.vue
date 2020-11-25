@@ -1,7 +1,7 @@
 <template>
 <div class="container-listCards">
-    <div class="card-side-btn" v-for="card in allCards" :key="card.id">
-     <List v-bind:card="card"/>
+    <div class="card-side-btn" v-for="list in allListItems" :key="list.id">
+     <List v-bind:list="list"/>
      <v-btn v-bind:class="{none:formOn}" @click="toggle" color="primary"><v-icon size="15">mdi-plus</v-icon> Add another list</v-btn>
      <div v-if="formOn">
         <v-form @submit="submit">
@@ -35,11 +35,11 @@ export default {
     },
 
     computed:{
-    ...mapGetters(["allCards"])
+    ...mapGetters(["allListItems"])
     },
 
     methods:{
-      ...mapActions(["fetchCards"]),
+      ...mapActions(["fetchListItems"]),
 
       toggle(){
         this.formOn = !this.formOn
@@ -54,7 +54,7 @@ export default {
     },
 
     created (){
-    this.fetchCards()
+    this.fetchListItems()
     }
 }
 
