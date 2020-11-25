@@ -2,6 +2,7 @@
   <v-app>
     <NavBar/>
     <v-main>
+      <router-view/>
     </v-main>
   </v-app>
 </template>
@@ -20,4 +21,7 @@ export default {
 };
 </script>
 
+<style  scoped>
+
+</style>
 
