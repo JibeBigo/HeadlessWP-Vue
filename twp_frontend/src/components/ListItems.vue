@@ -1,13 +1,15 @@
 <template>
-<div class="container-listCards">
+<div>
+  <div class="container-listCards">
     <div class="card-side-btn" v-for="list in allListItems" :key="list.id">
      <List v-bind:list="list"/>
-     <v-btn v-bind:class="{none:formOn}" @click="toggle" color="primary"><v-icon size="15">mdi-plus</v-icon> Add another list</v-btn>
+</div>
+<v-btn v-bind:class="{none:formOn}" @click="toggle" color="primary"><v-icon size="15">mdi-plus</v-icon> Add another list</v-btn>
      <div v-if="formOn">
-        <v-form @submit="submit">
+        <v-form @submit="onSubmit">
          <v-card width="250">
-           <v-text-field class="mr-5 ml-5" label="title" v-on="title"></v-text-field>
-           <v-btn color="green lighten-1">Add List</v-btn>
+           <v-text-field class="mr-5 ml-5" label="title" v-model="title"></v-text-field>
+           <v-btn color="green lighten-1" type="submit">Add List</v-btn>
            <v-btn @click="toggle" icon>X</v-btn>
           </v-card>
         </v-form>
@@ -39,18 +41,26 @@ export default {
     },
 
     methods:{
-      ...mapActions(["fetchListItems"]),
+      ...mapActions(["fetchListItems","addList"]),
 
       toggle(){
         this.formOn = !this.formOn
       },
 
-      submit(){
+      onSubmit(){
         event.preventDefault()
         console.log(this.title)
+        let newList = {
+          description:"",
+          name:this.title,
+          slug:this.title.toLowerCase(),
+          parent_id:0,
+          meta:[]
+        }
+        this.title=""
+        this.addList(newList)
+        console.log(newList)
       }
-
-
     },
 
     created (){
@@ -72,5 +82,8 @@ export default {
 }
 .none{
   display:none
+}
+.container-listCards{
+  display: flex;
 }
 </style>
