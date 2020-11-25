@@ -51,9 +51,8 @@ export default {
 .container-dropBadge{
     position: absolute;
     right: 0;
-    top:60px;
+    top:3.5625rem;
     width: 150px;
-    padding-right:10px;
 
 
 }
