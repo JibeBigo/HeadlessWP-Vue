@@ -1,0 +1,76 @@
+<template>
+<div class="container-listCards">
+    <div class="card-side-btn" v-for="card in allCards" :key="card.id">
+     <List v-bind:card="card"/>
+     <v-btn v-bind:class="{none:formOn}" @click="toggle" color="primary"><v-icon size="15">mdi-plus</v-icon> Add another list</v-btn>
+     <div v-if="formOn">
+        <v-form @submit="submit">
+         <v-card width="250">
+           <v-text-field class="mr-5 ml-5" label="title" v-on="title"></v-text-field>
+           <v-btn color="green lighten-1">Add List</v-btn>
+           <v-btn @click="toggle" icon>X</v-btn>
+          </v-card>
+        </v-form>
+     </div>
+  </div>
+</div>
+
+</template>
+
+<script>
+import {mapGetters,mapActions} from "vuex"
+import List from "../components/List"
+export default {
+    name:"ListItems",
+
+    data(){
+      return{
+        formOn:false,
+        title:""
+      }
+    },
+
+    components:{
+      List
+    },
+
+    computed:{
+    ...mapGetters(["allCards"])
+    },
+
+    methods:{
+      ...mapActions(["fetchCards"]),
+
+      toggle(){
+        this.formOn = !this.formOn
+      },
+
+      submit(){
+        event.preventDefault()
+        console.log(this.title)
+      }
+
+
+    },
+
+    created (){
+    this.fetchCards()
+    }
+}
+
+</script>
+
+<style>
+.container-listCards{
+  margin-top: 15px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.card-side-btn{
+  display: flex;
+}
+.none{
+  display:none
+}
+</style>
