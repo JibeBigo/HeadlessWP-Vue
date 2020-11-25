@@ -5,10 +5,10 @@
      <List v-bind:list="list"/>
 </div>
 <v-btn v-bind:class="{none:formOn}" @click="toggle" color="primary"><v-icon size="15">mdi-plus</v-icon> Add another list</v-btn>
-     <div v-if="formOn">
+     <div class="modal" v-if="formOn">
         <v-form @submit="onSubmit">
          <v-card width="250">
-           <v-text-field class="mr-5 ml-5" label="title" v-model="title"></v-text-field>
+           <v-text-field class="mr-5 ml-5" placeholder="Enter list title..." v-model="title"></v-text-field>
            <v-btn color="green lighten-1" type="submit">Add List</v-btn>
            <v-btn @click="toggle" icon>X</v-btn>
           </v-card>
@@ -85,5 +85,8 @@ export default {
 }
 .container-listCards{
   display: flex;
+}
+.modal{
+  z-index: 1;
 }
 </style>
