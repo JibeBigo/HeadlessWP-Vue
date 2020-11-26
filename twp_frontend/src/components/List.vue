@@ -3,8 +3,8 @@
         <v-card class="mr-5" width="250" min-height="200">
             <div class="d-flex justify-space-between align-center">
                 <v-card-title class="pointer">
-                    {{list.name}}
                     <v-form>
+                        {{list.name}}
                     </v-form>
                 </v-card-title>
                 <v-btn  @click="toggleModal" icon><v-icon>{{icons.mdiDotsHorizontal}}</v-icon></v-btn>
