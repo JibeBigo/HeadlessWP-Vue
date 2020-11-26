@@ -14,10 +14,9 @@
              <v-icon>{{icons.mdiClose}}</v-icon></v-btn>
           </v-card>
         </v-form>
-     </div>
+      </div>
   </div>
 </div>
-
 </template>
 
 <script>
@@ -75,6 +74,7 @@ export default {
 
 <style>
 .container-listCards{
+  display: flex;
   margin-top: 15px;
   margin-left: 15px;
   margin-right: 15px;

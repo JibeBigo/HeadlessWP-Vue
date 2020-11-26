@@ -3,9 +3,7 @@
         <v-card class="mr-5" width="250" min-height="200">
             <div class="d-flex justify-space-between align-center">
                 <v-card-title class="pointer">
-                    <v-form>
-                        {{list.name}}
-                    </v-form>
+                        <input v-on:keyup.enter="updateTitleList(list)" class="textarea-update" type="text" v-model="newListTitle" v-bind:placeholder="list.name"/>
                 </v-card-title>
                 <v-btn  @click="toggleModal" icon><v-icon>{{icons.mdiDotsHorizontal}}</v-icon></v-btn>
             </div>
@@ -29,40 +27,119 @@
 
                     </v-card>
                 </div>
-           <!-- <v-list-cards>SPOT FOR THE COMMENT CARD BODY</v-list-cards> -->
+            <v-list-item
+            v-for="card in allCards" :key="card.id"
+            >
+                <CardItems v-bind:card="card"/>
+            </v-list-item>
+
+            <div class="addCard">
+                <v-btn v-bind:class="{none:formOn}"
+                @click="toggle"
+                depressed
+                ><v-icon size="15">mdi-plus</v-icon>
+                    Add another card
+                </v-btn>
+                <div v-if="formOn">
+                    <v-form @submit="onSubmit">
+                    <v-card width="250">
+                        <v-textarea
+                            v-model="cardTitle"
+                            class="mr-5 ml-5"
+                            placeholder="Enter a title for this card..."
+                            rows="2"
+                        ></v-textarea>
+                        <v-btn class="ml-3" color="green lighten-1" type="submit">Add Card</v-btn>
+                        <v-btn @click="toggle" icon><v-icon>{{icons.mdiClose}}</v-icon></v-btn>
+                    </v-card>
+                    </v-form>
+                </div>
+            </div>
+            
+
         </v-card>
     </div>
 </template>
 
 <script>
 import {mdiDotsHorizontal,mdiClose,mdiCloseCircleOutline} from "@mdi/js"
-import {mapActions} from "vuex"
+import CardItems from '@/components/CardItems.vue'
+import { mapGetters, mapActions } from 'vuex'
 export default {
     name:"List",
     props:["list"],
     data(){
         return{
             icons:{mdiDotsHorizontal,mdiClose,mdiCloseCircleOutline},
-            modalList:false
+            modalList:false,
+            cardTitle: "",
+            formOn: false,
+            newListTitle:"",
+            
         }
     },
+     components: { CardItems },
 
     methods:{
-        ...mapActions(["deleteList"]),
+        ...mapActions(["deleteList","fetchCards", "addCard","updateList"]),
         toggleModal(){
             this.modalList = !this.modalList
+        },
+        toggle(){
+            this.formOn = !this.formOn
         },
 
         cancelList(id){
             console.log(id)
             this.deleteList(id)
+        },
+        
+        onSubmit(event){
+            event.preventDefault();
+            let newCard = {
+                title: this.cardTitle,
+                status: "publish",
+                content: "",
+                categories: this.list.id,
+            }
+            console.log(newCard);
+            this.addCard(newCard);
+            this.cardTitle="";
+        },
+
+        updateTitleList(list){
+            event.preventDefault()
+            const id = list.id
+            console.log(id,"id")
+            let updateList = {
+                id:list.id,
+                description:list.description,
+                name:this.newListTitle,
+                slug:list.slug,
+                parent:list.parent,
+                meta:list.meta,
+            }
+            this.updateList({updateList,id})
         }
+    },
+    computed: { 
+        ...mapGetters(["allCards"]),
+    },
+    created (){
+        this.fetchCards()
     }
 }
+
 
 </script>
 
 <style scoped>
+.addCard {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    margin-top: 3rem;
+}
 .container-card{
     display: flex;
 }
@@ -86,6 +163,25 @@ export default {
     top:0
 }
 .pointer{
-    pointer-events: stroke;
+    width: 100%;
 }
+.textarea-update{
+    width: 100%;
+    height: 25px;
+    outline: none;
+    text-indent: 5px;
+    border:1px solid white;
+    background-color:white
+
+}
+.textarea-update:hover{
+    border:2px solid #1E88E5;
+    border-radius:1px
+}
+::placeholder{
+    font-size:20px;
+    padding-bottom:10px;
+    color:black
+}
+
 </style>
