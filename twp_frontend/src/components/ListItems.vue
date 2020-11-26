@@ -1,20 +1,20 @@
 <template>
-  <div class="d-flex">
-    <div class="container-listCards d-flex">
-      <div class="card-side-btn" v-for="list in allListItems" :key="list.id">
+  <div>
+    <div class="container-listCards">
+      <div class="card-side-btn" v-for="(list,index) in allListItems" :key="index">
         <List v-bind:list="list" />
       </div>
-    </div>
-    <div class="addListButton">
       <v-btn v-bind:class="{none:formOn}" @click="toggle" color="primary">
         <v-icon size="15">mdi-plus</v-icon>Add another list
       </v-btn>
-      <div v-if="formOn">
-        <v-form @submit="submit">
+      <div class="modal" v-if="formOn">
+        <v-form @submit="onSubmit">
           <v-card width="250">
-            <v-text-field class="mr-5 ml-5" label="title" v-on="title"></v-text-field>
-            <v-btn color="green lighten-1">Add List</v-btn>
-            <v-btn @click="toggle" icon>X</v-btn>
+            <v-text-field class="mr-5 ml-5" placeholder="Enter list title..." v-model="title"></v-text-field>
+            <v-btn color="green lighten-1" class="white--text ml-4" type="submit">Add List</v-btn>
+            <v-btn @click="toggle" icon>
+              <v-icon>{{icons.mdiClose}}</v-icon>
+            </v-btn>
           </v-card>
         </v-form>
       </div>
@@ -25,17 +25,18 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import List from "../components/List";
+import { mdiClose } from "@mdi/js";
 
 export default {
   name: "ListItems",
 
   data() {
     return {
+      icons: { mdiClose },
       formOn: false,
       title: "",
     };
   },
-
   components: {
     List,
   },
@@ -45,12 +46,25 @@ export default {
   },
 
   methods: {
-    ...mapActions(["fetchListItems"]),
+    ...mapActions(["fetchListItems", "addList"]),
 
     toggle() {
       this.formOn = !this.formOn;
     },
-
+    onSubmit() {
+      event.preventDefault();
+      console.log(this.title);
+      let newList = {
+        description: "",
+        name: this.title,
+        slug: this.title.toLowerCase(),
+        parent_id: 0,
+        meta: [],
+      };
+      this.title = "";
+      this.addList(newList);
+      console.log(newList);
+    },
     submit() {
       event.preventDefault();
       console.log(this.title);
@@ -69,7 +83,7 @@ export default {
   margin-left: 15px;
 }
 
-.addListButton{
+.addListButton {
   margin-top: 15px;
 }
 
@@ -80,7 +94,13 @@ export default {
   display: none;
 }
 
-.v-main__wrap{
-  background-color:#0288D1;
+.v-main__wrap {
+  background-color: #0288d1;
+}
+.container-listCards {
+  display: flex;
+}
+.modal {
+  z-index: 1;
 }
 </style>
