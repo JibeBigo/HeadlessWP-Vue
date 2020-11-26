@@ -16,7 +16,7 @@
                             <v-list>
                                 <div class="container-deleteList">
                                     <p class="deleteListAction">Delete List</p>
-                                    <v-btn icon color="red lighten-1"><v-icon>{{icons.mdiCloseCircleOutline}}</v-icon></v-btn>
+                                    <v-btn @click="cancelList(list.id)" icon color="red lighten-1"><v-icon>{{icons.mdiCloseCircleOutline}}</v-icon></v-btn>
                                 </div>
                             </v-list>
                         </v-card-text>
@@ -32,6 +32,7 @@
 
 <script>
 import {mdiDotsHorizontal,mdiClose,mdiCloseCircleOutline} from "@mdi/js"
+import {mapActions} from "vuex"
 export default {
     name:"List",
     props:["list"],
@@ -43,8 +44,14 @@ export default {
     },
 
     methods:{
+        ...mapActions(["deleteList"]),
         toggleModal(){
             this.modalList = !this.modalList
+        },
+
+        cancelList(id){
+            console.log(id)
+            this.deleteList(id)
         }
     }
 }

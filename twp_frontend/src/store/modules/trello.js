@@ -15,7 +15,6 @@ const actions= {
     },
 
     async addList({commit},newList){
-        
         let response
         response = await axios.post('http://localhost:8000/?rest_route=/wp/v2/categories',newList,{
             headers:{'Authorization':`Basic ${token}`
@@ -30,11 +29,26 @@ const actions= {
         console.log(response)
 
         commit("newList",newList)
+    },
+
+    async deleteList({commit},id){
+        console.log(id)
+        await axios.delete(`http://localhost:8000/?rest_route=/wp/v2/categories/${id}?force=true`,{
+            headers:{'Authorization':`Basic ${token}`
+            }
+        }).then(response =>{
+            console.log(response)
+        }).catch(err =>{
+            console.log(err)
+        })
+
+        commit("removeList",id)
     }
 };
 const mutations= {
     setListItems:(state,list) => (state.listItems = list),
-    newList:(state,newList) => state.listItems.push(newList)
+    newList:(state,newList) => state.listItems.push(newList),
+    removeList:(state,id) => state.listItems = state.listItems.filter(list => list.id != id)
 };
 const getters= {
     allListItems:(state) => state.listItems

@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class="container-listCards">
-    <div class="card-side-btn" v-for="list in allListItems" :key="list.id">
+    <div class="card-side-btn" v-for="(list,index) in allListItems" :key="index">
      <List v-bind:list="list"/>
 </div>
 <v-btn v-bind:class="{none:formOn}" @click="toggle" color="primary"><v-icon size="15">mdi-plus</v-icon> Add another list</v-btn>
