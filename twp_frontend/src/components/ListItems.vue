@@ -9,8 +9,9 @@
         <v-form @submit="onSubmit">
          <v-card width="250">
            <v-text-field class="mr-5 ml-5" placeholder="Enter list title..." v-model="title"></v-text-field>
-           <v-btn color="green lighten-1" type="submit">Add List</v-btn>
-           <v-btn @click="toggle" icon>X</v-btn>
+           <v-btn color="green lighten-1"  class="white--text ml-4" type="submit">Add List</v-btn>
+           <v-btn @click="toggle" icon>
+             <v-icon>{{icons.mdiClose}}</v-icon></v-btn>
           </v-card>
         </v-form>
      </div>
@@ -22,11 +23,13 @@
 <script>
 import {mapGetters,mapActions} from "vuex"
 import List from "../components/List"
+import {mdiClose} from "@mdi/js"
 export default {
     name:"ListItems",
 
     data(){
       return{
+        icons:{mdiClose},
         formOn:false,
         title:""
       }
