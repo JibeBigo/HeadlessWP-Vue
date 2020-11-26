@@ -1,4 +1,5 @@
 import axios from "axios"
+const tokenY ="eW9hbm4ucG9uc0BlcGl0ZWNoLmV1Ok1vaSZUb2kwOHdz"
 
 const state = {
     listItems:[],
@@ -20,14 +21,13 @@ const actions= {
 
     async fetchCards({ commit }) {
         const response = await axios.get('http://localhost:8000/?rest_route=/wp/v2/posts')
-        console.log(response.data)
         commit("setCards", response.data)
     },
 
     async addCard ({ commit }, title) {
         let response = await axios.post(
             'http://localhost:8000/?rest_route=/wp/v2/posts',
-            { title }
+            title, { headers:{'Authorization' : `Basic ${tokenY}`}}
         );
         console.log(response.data)
         commit ("newCard", response.data)
