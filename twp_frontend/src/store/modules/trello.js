@@ -29,7 +29,6 @@ const actions= {
             'http://localhost:8000/wp-json//wp/v2/posts',
             title, { headers:{'Authorization' : `Basic ${tokenY}`}}
         );
-        console.log(response.data)
         commit ("newCard", response.data)
     },
 
