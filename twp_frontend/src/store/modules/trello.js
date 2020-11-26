@@ -9,14 +9,14 @@ const state = {
 const actions= {
 
     async fetchListItems({commit}){
-        const response = await axios.get('http://localhost:8000/?rest_route=/wp/v2/categories')
-        console.log(response.data)
+        const response = await axios.get('http://localhost:8000/wp-json/wp/v2/categories')
+        console.log(response)
         commit("setListItems", response.data)
     },
 
     async addList({commit},newList){
         let response
-        response = await axios.post('http://localhost:8000/?rest_route=/wp/v2/categories',newList,{
+        response = await axios.post('http://localhost:8000/wp-json/wp/v2/categories',newList,{
             headers:{'Authorization':`Basic ${token}`
             }
             
@@ -33,7 +33,7 @@ const actions= {
 
     async deleteList({commit},id){
         console.log(id)
-        await axios.delete(`http://localhost:8000/?rest_route=/wp/v2/categories/${id}?force=true`,{
+        await axios.delete(`http://localhost:8000/wp-json/wp/v2/categories/${id}?force=true`,{
             headers:{'Authorization':`Basic ${token}`
             }
         }).then(response =>{

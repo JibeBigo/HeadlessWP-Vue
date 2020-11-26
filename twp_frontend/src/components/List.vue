@@ -2,7 +2,11 @@
     <div class="container-card">
         <v-card class="mr-5" width="250" min-height="200">
             <div class="d-flex justify-space-between align-center">
-                <v-card-title>{{list.name}}</v-card-title>
+                <v-card-title class="pointer">
+                    {{list.name}}
+                    <v-form>
+                    </v-form>
+                </v-card-title>
                 <v-btn  @click="toggleModal" icon><v-icon>{{icons.mdiDotsHorizontal}}</v-icon></v-btn>
             </div>
             <div v-if="modalList" class="modal">
@@ -80,5 +84,8 @@ export default {
     position: absolute;
     right: 0;
     top:0
+}
+.pointer{
+    pointer-events: stroke;
 }
 </style>
