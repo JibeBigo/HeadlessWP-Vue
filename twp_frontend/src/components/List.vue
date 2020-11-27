@@ -3,7 +3,7 @@
         <v-card class="mr-5" width="250" min-height="200">
             <div class="d-flex justify-space-between align-center">
                 <v-card-title class="pointer">
-                        <input ref="input" v-on:keyup.enter="updateTitleList(list)" @click="inputStyle" @blur="onCloseInput" v-bind:class="{updateFocus:input}" class="textarea-update" type="text" v-model="newListTitle" v-bind:placeholder="list.name"/>
+                        <input  v-on:keyup.enter="updateTitleList(list)" @click="inputStyle" @blur="onCloseInput" v-bind:class="{updateFocus:input}" class="textarea-update" type="text" v-model="newListTitle"/>
                 </v-card-title>
                 <v-btn v-click-outside="toggleCloseModal" @click="toggleModal"  icon><v-icon>{{icons.mdiDotsHorizontal}}</v-icon></v-btn>
             </div>
@@ -70,7 +70,7 @@ export default {
             modalList:false,
             cardTitle: "",
             formOn: false,
-            newListTitle:"",
+            newListTitle:this.list.name,
             input:false,
             
         }
@@ -186,13 +186,14 @@ export default {
     height: 25px;
     outline: none;
     text-indent: 5px;
-    border:1px solid white;
-    background-color:white
+    border:1px solid #ecefe1;
+    background-color:#ecefe1
 
 }
 .updateFocus{
     border:2px solid #1E88E5;
-    border-radius:2px
+    border-radius:2px;
+    background-color:white
 }
 ::placeholder{
     font-size:15px;
