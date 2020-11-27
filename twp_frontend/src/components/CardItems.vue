@@ -36,7 +36,7 @@
                         </div>
 
                         <div>
-                            <v-btn v-bind:class="{none:formDescOn}" @click="toggleDesc">Add a more Detailed description...</v-btn>
+                            <v-btn v-bind:class="{none:formDescOn}" v-click-outside="toggleCloseAddDesc" @click="toggleDesc">Add a more Detailed description...</v-btn>
                                 <div v-if="formDescOn">
                                     <v-form @submit="onSubmitDesc(card)">
                                     <v-card width="250">
@@ -45,7 +45,7 @@
                                             placeholder="Add a more detailed description..." 
                                             v-model="description"></v-textarea>
                                         <v-btn color="green lighten-1"  class="white--text ml-4" type="submit">Save</v-btn>
-                                        <v-btn v-click-outside="toggleCloseAddDesc" @click="toggleDesc" icon>
+                                        <v-btn @click="toggleDesc" icon>
                                         <v-icon>{{icons.mdiClose}}</v-icon></v-btn>
                                     </v-card>
                                     </v-form>
