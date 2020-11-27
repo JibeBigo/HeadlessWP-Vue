@@ -10,7 +10,7 @@
                 <span>llo</span>
                 </div>
             </v-toolbar-title>
-                  <v-autocomplete cache-items class="mx-3 ml-10" flat hide-no-data hide-details label="Search" solo-inverted></v-autocomplete>
+                  <v-text-field v-model="search" v-on:keyup="searchFilter" cache-items class="mx-3 ml-10" flat hide-no-data hide-details label="Search" solo-inverted></v-text-field>
              <v-spacer></v-spacer>
              <router-link to="/"><v-btn depressed color="blue darken-3">Home</v-btn></router-link>
              <router-link to="/about"><v-btn depressed color="blue darken-3">About</v-btn></router-link>
@@ -32,6 +32,7 @@ export default {
     return{
 
         isOn:false,
+        search:""
         }
 
     },
@@ -40,7 +41,15 @@ export default {
         change(){
         this.isOn =!this.isOn
         console.log(this.isOn)
-    }
+        },
+
+        searchFilter(){
+            console.log(this.search)
+
+            ///Function to get the value from the input//
+            //OK!!
+        }
+
     }
 
 }

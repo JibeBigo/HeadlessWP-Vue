@@ -48,7 +48,6 @@ export default {
       toggle(){
         this.formOn = !this.formOn
       },
-
       onSubmit(){
         event.preventDefault()
         console.log(this.title)
@@ -67,7 +66,7 @@ export default {
 
     created (){
     this.fetchListItems()
-    }
+    },
 }
 
 </script>

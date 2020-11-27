@@ -3,15 +3,15 @@
         <v-card class="mr-5" width="250" min-height="200">
             <div class="d-flex justify-space-between align-center">
                 <v-card-title class="pointer">
-                        <input v-on:keyup.enter="updateTitleList(list)" class="textarea-update" type="text" v-model="newListTitle" v-bind:placeholder="list.name"/>
+                        <input ref="input" v-on:keyup.enter="updateTitleList(list)" @click="inputStyle" @blur="onCloseInput" v-bind:class="{updateFocus:input}" class="textarea-update" type="text" v-model="newListTitle" v-bind:placeholder="list.name"/>
                 </v-card-title>
-                <v-btn  @click="toggleModal" icon><v-icon>{{icons.mdiDotsHorizontal}}</v-icon></v-btn>
+                <v-btn v-click-outside="toggleCloseModal" @click="toggleModal"  icon><v-icon>{{icons.mdiDotsHorizontal}}</v-icon></v-btn>
             </div>
             <div v-if="modalList" class="modal">
-                    <v-card>
+                    <v-card >
                         <v-card-title class="d-flex justify-center">
                                      <span>List Actions</span> 
-                                    <v-btn class="modalCorner" @click="toggleModal" icon><v-icon>{{icons.mdiClose}}</v-icon></v-btn>
+                                    <v-btn class="modalCorner" @click="toggleCloseModal" icon><v-icon>{{icons.mdiClose}}</v-icon></v-btn>
                         </v-card-title>
                         <v-divider class="ml-5 mr-5"></v-divider>
                         <v-card-text>
@@ -22,17 +22,11 @@
                                 </div>
                             </v-list>
                         </v-card-text>
-
-
-
                     </v-card>
                 </div>
-            <v-list-item
-            v-for="card in allCards" :key="card.id"
-            >
+            <v-list-item v-for="card in allCards" :key="card.id">
                 <CardItems v-bind:card="card"/>
             </v-list-item>
-
             <div class="addCard">
                 <v-btn v-bind:class="{none:formOn}"
                 @click="toggle"
@@ -65,7 +59,9 @@
 import {mdiDotsHorizontal,mdiClose,mdiCloseCircleOutline} from "@mdi/js"
 import CardItems from '@/components/CardItems.vue'
 import { mapGetters, mapActions } from 'vuex'
+import ClickOutside from 'vue-click-outside'
 export default {
+    
     name:"List",
     props:["list"],
     data(){
@@ -75,6 +71,7 @@ export default {
             cardTitle: "",
             formOn: false,
             newListTitle:"",
+            input:false,
             
         }
     },
@@ -83,10 +80,22 @@ export default {
     methods:{
         ...mapActions(["deleteList","fetchCards", "addCard","updateList"]),
         toggleModal(){
-            this.modalList = !this.modalList
+            this.modalList = true
+        },
+        toggleCloseModal(){
+             this.modalList = false
         },
         toggle(){
             this.formOn = !this.formOn
+        },
+
+        //function to open input when cliking
+        inputStyle(){
+            this.input = true
+        },
+        //function to close input when clicking outside
+        onCloseInput(){
+            this.input = false
         },
 
         cancelList(id){
@@ -127,7 +136,14 @@ export default {
     },
     created (){
         this.fetchCards()
-    }
+    },
+      mounted () {
+    this.popupItem = this.$el
+  },
+    directives: {
+    
+    ClickOutside
+  }
 }
 
 
@@ -174,12 +190,12 @@ export default {
     background-color:white
 
 }
-.textarea-update:hover{
+.updateFocus{
     border:2px solid #1E88E5;
-    border-radius:1px
+    border-radius:2px
 }
 ::placeholder{
-    font-size:20px;
+    font-size:15px;
     padding-bottom:10px;
     color:black
 }
