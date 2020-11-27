@@ -38,14 +38,14 @@
                         <div>
                             <v-btn v-bind:class="{none:formDescOn}" @click="toggleDesc">Add a more Detailed description...</v-btn>
                                 <div v-if="formDescOn">
-                                    <v-form @submit="onSubmitDesc">
+                                    <v-form @submit="onSubmitDesc(card)">
                                     <v-card width="250">
                                         <v-textarea 
                                             class="mr-5 ml-5" 
                                             placeholder="Add a more detailed description..." 
                                             v-model="description"></v-textarea>
                                         <v-btn color="green lighten-1"  class="white--text ml-4" type="submit">Save</v-btn>
-                                        <v-btn @click="toggleDesc" icon>
+                                        <v-btn v-click-outside="toggleCloseAddDesc" @click="toggleDesc" icon>
                                         <v-icon>{{icons.mdiClose}}</v-icon></v-btn>
                                     </v-card>
                                     </v-form>
@@ -107,6 +107,8 @@
 <script>
 import { mdiPlaylistCheck, mdiArchive, mdiClose,mdiDelete, mdiPencil } from "@mdi/js";
 import { mapGetters, mapActions } from "vuex";
+import ClickOutside from "vue-click-outside";
+
 
 export default {
     props: ["card", "list"],
@@ -118,15 +120,16 @@ export default {
         formDescOn:false,
         icons: { mdiPlaylistCheck, mdiDelete, mdiPencil, mdiArchive, mdiClose },
         focused: false,
+        description: "",
         newComment: "",
-        editComment: "editing..."
+        editComment: "editing...",
         };
     },
     computed: {
         ...mapGetters(["allComments"]),
     },
     methods: {
-        ...mapActions(["addComment", "deleteComment", "deleteCard"]),
+        ...mapActions(["addComment", "deleteComment", "deleteCard", "addDescription"]),
         archiveCard(id){
             console.log(id)
             this.deleteCard(id)
@@ -172,6 +175,28 @@ export default {
         }
         if (Math.floor(seconds) < 30) return "just now";
         else return Math.floor(seconds) + " seconds ago";
+        },
+
+        toggleCloseAddDesc () {
+        this.formDescOn = false;
+        },
+
+        onSubmitDesc(card) {
+            event.preventDefault();
+            let newDesc = {
+                id: card.id,
+                content: this.description,
+            };
+            this.addDescription(newDesc);
+            this.description = "";
+        },
+
+        mounted() {
+            this.popupItem = this.$el;
+        },
+
+        directives: {
+            ClickOutside,
         },
     },
 };

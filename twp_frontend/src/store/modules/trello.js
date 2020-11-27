@@ -142,12 +142,26 @@ const actions = {
     },
 
     async deleteCard({ commit }, id) {
-    await axios.delete(`http://localhost:8000/wp-json//wp/v2/posts/${id}?force=true`, {
-    headers: { 'Authorization': `Basic ${tokenY}` }
-});
-    commit("removeCard", id)
-},
+        await axios.delete(`http://localhost:8000/wp-json//wp/v2/posts/${id}?force=true`, {
+        headers: { 'Authorization': `Basic ${tokenY}` }
+        });
+        commit("removeCard", id)
+    },
+
+    async addDescription({ commit }, description) {
+        let response = await axios.post(
+        `http://localhost:8000/wp-json/wp/v2/posts/${description.id}`,
+        description,
+        {
+            headers: { Authorization: `Basic ${tokenY}` },
+        },
+        );
+
+        console.log(response);
+        commit("updateCard", response.data);
+    }
 };
+
 
 const mutations = {
     setListItems: (state, list) => (state.listItems = list),
@@ -162,6 +176,8 @@ const mutations = {
     newComment: (state, comment) => state.comments.unshift(comment),
     removeComment: (state, id) =>
         (state.comments = state.comments.filter((comment) => comment.id != id)),
+    freshList: () => { return true },
+    updateCard: (state, newDesc) => state.cards.unshift(newDesc),
 };
 
 export default {
