@@ -7,7 +7,7 @@
         >
             <template v-slot:activator="{ on, attrs }">
                 <v-card
-                    class="mb-4 rounded-tl-xl rounded-br-xl"
+                    class="mb-3 rounded-tl-xl rounded-br-xl"
                     elevation="5"
                     outlined
                     v-bind="attrs"
@@ -23,43 +23,96 @@
             </template>
 
             <v-card>
-            <v-card-title class="headline grey lighten-2">
-            Privacy Policy
-            </v-card-title>
+                <v-card-title class="headline grey lighten-2">
+                    {{ card.title.rendered }}
+                </v-card-title>
+                
+                <v-card-subtitle class="mb-2">
+                    in list {{ list.name }}
+                </v-card-subtitle>
 
-            <v-card-text>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </v-card-text>
+                <v-card-text class="d-flex flex-row-reverse">
+                    <div width="30%">
+                        <v-list>
+                            <v-list-item>
+                                Actions
+                            </v-list-item>
+                            <v-list-item>
+                                <v-btn @click="archiveCard(card.id)" class="d-flex align-items">
+                                    <div><v-icon> {{ icons.mdiArchive }}</v-icon></div>
+                                    <div><p class="ml-1 mb-0">Archive card</p></div>
+                                </v-btn>
+                            </v-list-item>
+                        </v-list>
+                    </div>
+                    <div width="70%">
+                        <div class="d-flex align-items">
+                            <v-icon> {{ icons.mdiPlaylistCheck }}</v-icon>
+                            <h1 class="ml-1 mb-0">Description</h1>
+                        </div>
 
-            <v-divider></v-divider>
+                        <div>
+                            <v-btn v-bind:class="{none:formDescOn}" @click="toggleDesc">Add a more Detailed description...</v-btn>
+                                <div v-if="formDescOn">
+                                    <v-form @submit="onSubmitDesc">
+                                    <v-card width="250">
+                                        <v-textarea 
+                                            class="mr-5 ml-5" 
+                                            placeholder="Add a more detailed description..." 
+                                            v-model="description"></v-textarea>
+                                        <v-btn color="green lighten-1"  class="white--text ml-4" type="submit">Save</v-btn>
+                                        <v-btn @click="toggleDesc" icon>
+                                        <v-icon>{{icons.mdiClose}}</v-icon></v-btn>
+                                    </v-card>
+                                    </v-form>
+                                </div>
+                        </div>
+                    </div>
+                </v-card-text>
 
-            <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-                color="primary"
-                text
-                @click="dialog = false"
-            >
-                I accept
-            </v-btn>
-            </v-card-actions>
-      </v-card>
+                <!-- <v-divider></v-divider>
+
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="primary"
+                    text
+                    @click="dialog = false"
+                >
+                </v-btn>
+                </v-card-actions> -->
+            </v-card>
         </v-dialog>
     </div>
 </template>
 
 <script>
-import { mdiPlaylistCheck } from '@mdi/js'
+import { mapGetters, mapActions } from 'vuex'
+import { mdiPlaylistCheck, mdiArchive, mdiClose } from '@mdi/js'
 
 export default {
-    props: ["card"],
+    props: ["card", "list"],
     name: "CardItems",
 
     data () {
         return {
             dialog: false,
-            icons: { mdiPlaylistCheck },
+            formDescOn:false,
+            icons: { mdiPlaylistCheck, mdiArchive, mdiClose },
         }
+    },
+
+    methods: {
+        ...mapActions(["deleteCard"]),
+        
+        archiveCard(id){
+            console.log(id)
+            this.deleteCard(id)
+        },
+
+        toggleDesc(){
+            this.formDescOn = !this.formDescOn
+        },
     },
 
 }

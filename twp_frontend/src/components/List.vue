@@ -28,11 +28,11 @@
                     </v-card>
                 </div>
 
-            <v-list-item
-            v-for="card in allCards" :key="card.id"
-            >
-                <CardItems v-bind:card="card"/>
-            </v-list-item>
+            <div v-for="card in allCards" :key="card.id">
+                <v-list-item v-if="list.id === card.categories[0]">
+                    <CardItems v-bind:card="card" v-bind:list="list"/>
+                </v-list-item>
+            </div>
 
             <div class="addCard">
                 <v-btn v-bind:class="{none:formOn}"
@@ -85,7 +85,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["deleteList", "fetchCards", "addCard"]),
+        ...mapActions(["fetchCards", "deleteList", "addCard"]),
 
         toggleModal(){
             this.modalList = !this.modalList

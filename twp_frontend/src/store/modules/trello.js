@@ -61,7 +61,14 @@ const actions= {
         })
 
         commit("removeList",id)
-    }
+    },
+
+    async deleteCard({ commit }, id) {
+        await axios.delete(`http://localhost:8000/wp-json//wp/v2/posts/${id}?force=true`, {
+        headers: { 'Authorization': `Basic ${tokenY}` }
+    });
+        commit("removeCard", id)
+    },
 };
 
 const mutations= {
@@ -69,7 +76,8 @@ const mutations= {
     setCards: (state, cardItems) => (state.cards = cardItems),
     newCard: (state, newCard) => state.cards.unshift(newCard),
     newList:(state,newList) => state.listItems.push(newList),
-    removeList:(state,id) => state.listItems = state.listItems.filter(list => list.id != id)
+    removeList:(state,id) => state.listItems = state.listItems.filter(list => list.id != id),
+    removeCard:(state,id) => state.cards = state.cards.filter(card => card.id != id)
 };
 
 

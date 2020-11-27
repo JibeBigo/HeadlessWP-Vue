@@ -83,6 +83,7 @@ export default {
 
 .card-side-btn{
   display: flex;
+  height: fit-content;
 }
 .none{
   display:none
