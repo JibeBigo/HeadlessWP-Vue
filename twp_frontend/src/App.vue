@@ -1,14 +1,13 @@
 <template>
-  <v-app>
+  <v-app>      
     <NavBar/>
-    <v-main>
+    <v-main class="blue darken-2">
       <router-view/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-
 import NavBar from "./components/layouts/Navbar"
 
 export default {

@@ -4,7 +4,7 @@
       <div class="card-side-btn" v-for="(list,index) in allListItems" :key="index">
         <List v-bind:list="list" />
       </div>
-      <v-btn v-bind:class="{none:formOn}" @click="toggle" color="primary">
+      <v-btn v-bind:class="{none:formOn}" @click="toggle" color="blue lighten-2">
         <v-icon size="15">mdi-plus</v-icon>Add another list
       </v-btn>
       <div class="modal" v-if="formOn">
@@ -42,11 +42,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["allListItems"]),
+    ...mapGetters(["allListItems", "allComments"]),
   },
 
   methods: {
-    ...mapActions(["fetchListItems", "addList"]),
+    ...mapActions(["fetchListItems", "addList", "fetchComments"]),
 
     toggle() {
       this.formOn = !this.formOn;
@@ -73,6 +73,7 @@ export default {
 
   created() {
     this.fetchListItems();
+    this.fetchComments();
   },
 };
 </script>
