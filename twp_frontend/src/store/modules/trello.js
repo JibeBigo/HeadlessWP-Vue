@@ -1,5 +1,5 @@
 import axios from "axios"
-const token ="eW9hbm4ucG9uc0BlcGl0ZWNoLmV1Ok1vaSZUb2kwOHdz"
+const tokenY ="eW9hbm4ucG9uc0BlcGl0ZWNoLmV1Ok1vaSZUb2kwOHdz"
 
 const state = {
     listItems: [],
@@ -29,7 +29,7 @@ const actions = {
         "http://localhost:8000/wp-json/wp/v2/comments",
         comment,
         {
-            headers: { Authorization: `Basic ${token}` },
+            headers: { Authorization: `Basic ${tokenY}` },
         },
         );
         commit("newComment", response.data);
@@ -39,7 +39,7 @@ const actions = {
         const response = await axios.delete(
         `http://localhost:8000/wp-json/wp/v2/comments/${id}?force=true`,
         {
-            headers: { Authorization: `Basic ${token}` },
+            headers: { Authorization: `Basic ${tokenY}` },
         },
         );
         commit("removeComment", response.data.previous.id);
@@ -49,7 +49,7 @@ const actions = {
         const response = await axios.get(
         "http://localhost:8000/wp-json/wp/v2/users/",
         {
-            headers: { Authorization: `Basic ${token}` },
+            headers: { Authorization: `Basic ${tokenY}` },
         },
         );
         commit("setUsers", response.data);
@@ -78,7 +78,7 @@ const actions = {
         let response;
         response = await axios
         .post("http://localhost:8000/wp-json/wp/v2/categories", newList, {
-            headers: { Authorization: `Basic ${token}` },
+            headers: { Authorization: `Basic ${tokenY}` },
         })
         .then((response) => {
             console.log(response);
@@ -96,7 +96,7 @@ const actions = {
         .delete(
             `http://localhost:8000/wp-json/wp/v2/categories/${id}?force=true`,
             {
-            headers: { Authorization: `Basic ${token}` },
+            headers: { Authorization: `Basic ${tokenY}` },
             },
         )
         .then((response) => {
@@ -116,7 +116,7 @@ const actions = {
         `http://localhost:8000/wp-json/wp/v2/categories/${id}`,
         updateList,
         {
-            headers: { Authorization: `Basic ${token}` },
+            headers: { Authorization: `Basic ${tokenY}` },
         },
         );
         console.log(response);
@@ -135,7 +135,7 @@ const actions = {
         let response = await axios.post(
         "http://localhost:8000/wp-json//wp/v2/posts",
         title,
-        { headers: { Authorization: `Basic ${token}` } },
+        { headers: { Authorization: `Basic ${tokenY}` } },
         );
         console.log(response.data);
         commit("newCard", response.data);
@@ -143,7 +143,7 @@ const actions = {
 
     async deleteCard({ commit }, id) {
     await axios.delete(`http://localhost:8000/wp-json//wp/v2/posts/${id}?force=true`, {
-    headers: { 'Authorization': `Basic ${token}` }
+    headers: { 'Authorization': `Basic ${tokenY}` }
 });
     commit("removeCard", id)
 },

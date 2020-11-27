@@ -1,6 +1,6 @@
 <template>
     <div class="container-card">
-        <v-card class="mr-2 blue-grey lighten-5" width="272" min-height="100">
+        <v-card class="mr-2 blue-grey lighten-5" width="272" min-height="120">
         <div class="d-flex justify-space-between align-center">
             <v-card-title class="pointer py-0">
             <input
@@ -48,7 +48,7 @@
         </div>
 
         <div class="addCard">
-        <v-btn v-bind:class="{none:formOn}" @click="toggle" depressed>
+        <v-btn v-bind:class="{none:formOn}" v-click-outside="toggleCloseAddCard" @click="toggle" depressed>
             <v-icon size="15">mdi-plus</v-icon>Add another card
         </v-btn>
         <div v-if="formOn">
@@ -60,8 +60,8 @@
                 placeholder="Enter a title for this card..."
                 rows="2"
                 ></v-textarea>
-                <v-btn color="green lighten-1" type="submit">Add Card</v-btn>
-                <v-btn @click="toggle" icon>X</v-btn>
+                <v-btn class="white--text ml-4"  color="green lighten-1" type="submit">Add Card</v-btn>
+                <v-btn @click="toggle" icon><v-icon>{{icons.mdiClose}}</v-icon></v-btn>
             </v-card>
             </v-form>
         </div>
@@ -98,6 +98,9 @@ export default {
         },
         toggleCloseModal() {
         this.modalList = false;
+        },
+        toggleCloseAddCard() {
+        this.formOn = false;
         },
         toggle() {
         this.formOn = !this.formOn;
@@ -196,7 +199,7 @@ export default {
   outline: none;
   text-indent: 5px;
   border:1px solid #ecefe1;
- background-color:#ecefe1
+ background-color:#ecefe1;
 }
 .updateFocus {
     background-color: white;
@@ -207,5 +210,9 @@ export default {
   font-size: 15px;
   padding-bottom: 10px;
   color: black;
+}
+
+.none {
+    display: none;
 }
 </style>
