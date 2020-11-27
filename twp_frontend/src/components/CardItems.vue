@@ -4,6 +4,7 @@
         <template v-slot:activator="{ on, attrs }">
             <v-card class="mb-2 cardItem" elevation="2" outlined v-bind="attrs" v-on="on">
             <v-card-text class="px-2 py-2">{{ card.title.rendered }}</v-card-text>
+            <v-icon v-if="card.content.rendered" class="ml-2"> {{ icons.mdiPlaylistCheck }}</v-icon>
             </v-card>
         </template>
 
