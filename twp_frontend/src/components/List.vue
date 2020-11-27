@@ -12,7 +12,6 @@
             class="textarea-update"
             type="text"
             v-model="newListTitle"
-            v-bind:placeholder="list.name"
           />
         </v-card-title>
         <v-btn v-click-outside="toggleCloseModal" @click="toggleModal" icon>
@@ -40,33 +39,33 @@
           </v-card-text>
         </v-card>
       </div>
-   
-    <!-- <v-list-cards>SPOT FOR THE COMMENT CARD BODY</v-list-cards> -->
-    <div v-for="card in allCards" :key="card.id">
-      <v-list-item v-if="card.categories[0] === list.id" class="mx-auto px-2">
-        <CardItems v-bind:card="card" />
-      </v-list-item>
-    </div>
 
-    <div class="addCard">
-      <v-btn v-bind:class="{none:formOn}" @click="toggle" depressed>
-        <v-icon size="15">mdi-plus</v-icon>Add another card
-      </v-btn>
-      <div v-if="formOn">
-        <v-form @submit="onSubmit">
-          <v-card width="250">
-            <v-textarea
-              v-model="cardTitle"
-              class="mr-5 ml-5"
-              placeholder="Enter a title for this card..."
-              rows="2"
-            ></v-textarea>
-            <v-btn color="green lighten-1" type="submit">Add Card</v-btn>
-            <v-btn @click="toggle" icon>X</v-btn>
-          </v-card>
-        </v-form>
+      <!-- <v-list-cards>SPOT FOR THE COMMENT CARD BODY</v-list-cards> -->
+      <div v-for="card in allCards" :key="card.id">
+        <v-list-item v-if="card.categories[0] === list.id" class="mx-auto px-2">
+          <CardItems v-bind:card="card" />
+        </v-list-item>
       </div>
-    </div>
+
+      <div class="addCard">
+        <v-btn v-bind:class="{none:formOn}" @click="toggle" depressed>
+          <v-icon size="15">mdi-plus</v-icon>Add another card
+        </v-btn>
+        <div v-if="formOn">
+          <v-form @submit="onSubmit">
+            <v-card width="250">
+              <v-textarea
+                v-model="cardTitle"
+                class="mr-5 ml-5"
+                placeholder="Enter a title for this card..."
+                rows="2"
+              ></v-textarea>
+              <v-btn color="green lighten-1" type="submit">Add Card</v-btn>
+              <v-btn @click="toggle" icon>X</v-btn>
+            </v-card>
+          </v-form>
+        </div>
+      </div>
     </v-card>
   </div>
 </template>
@@ -85,7 +84,7 @@ export default {
       modalList: false,
       cardTitle: "",
       formOn: false,
-      newListTitle: "",
+      newListTitle: this.list.name,
       input: false,
     };
   },
@@ -169,6 +168,7 @@ export default {
 }
 .container-card {
   display: flex;
+  height: fit-content;
 }
 .modal {
   position: absolute;
@@ -195,12 +195,14 @@ export default {
   height: 25px;
   outline: none;
   text-indent: 5px;
-  border: 1px solid white;
-  background-color: white;
+  border: 1px solid #ecefe1;
+  background-color: #ecefe1;
 }
 .updateFocus {
   border: 2px solid #1e88e5;
   border-radius: 2px;
+  border: 1px solid black;
+  background-color: white;
 }
 ::placeholder {
   font-size: 15px;
