@@ -30,6 +30,8 @@ import { mdiClose } from "@mdi/js";
 export default {
   name: "ListItems",
 
+  props: ["allListItemsFiltered"],
+
   data() {
     return {
       icons: { mdiClose },
@@ -37,6 +39,7 @@ export default {
       title: "",
     };
   },
+
   components: {
     List,
   },

@@ -1,6 +1,6 @@
 import axios from "axios";
-const token = "eWFuaXMuYmVraHRhb3VpQGVwaXRlY2guZXU6WWIxOTExOTMyMDI2";
-const tokenY = "eW9hbm4ucG9uc0BlcGl0ZWNoLmV1Ok1vaSZUb2kwOHdz";
+const token =
+  "amJzaWx2ZXN0cmVAaG90bWFpbC5mcjpHQlJ3b0FEYmQ5SWlUZnFhell3SSR2Rnc=";
 
 const state = {
   listItems: [],
@@ -30,26 +30,19 @@ const actions = {
       "http://localhost:8000/wp-json/wp/v2/comments",
       comment,
       {
-        auth: {
-          username: "jb",
-          password: "GBRwoADbd9IiTfqazYwI$vFw",
-        },
+        headers: { Authorization: `Basic ${token}` },
       },
     );
     commit("newComment", response.data);
   },
 
   async deleteComment({ commit }, id) {
-    const response = await axios
-      .delete(
-        `http://localhost:8000/wp-json/wp/v2/comments/${id}?force=true`,
-        {
-          auth: {
-            username: "jb",
-            password: "GBRwoADbd9IiTfqazYwI$vFw",
-          },
-        },
-      )
+    const response = await axios.delete(
+      `http://localhost:8000/wp-json/wp/v2/comments/${id}?force=true`,
+      {
+        headers: { Authorization: `Basic ${token}` },
+      },
+    );
     commit("removeComment", response.data.previous.id);
   },
 
@@ -57,10 +50,7 @@ const actions = {
     const response = await axios.get(
       "http://localhost:8000/wp-json/wp/v2/users/",
       {
-        auth: {
-          username: "jb",
-          password: "GBRwoADbd9IiTfqazYwI$vFw",
-        },
+        headers: { Authorization: `Basic ${token}` },
       },
     );
     commit("setUsers", response.data);
@@ -119,6 +109,22 @@ const actions = {
 
     commit("removeList", id);
   },
+
+  async updateList({ commit }, { updateList, id }) {
+    console.log(updateList);
+    console.log(id);
+    let response = await axios.post(
+      `http://localhost:8000/wp-json/wp/v2/categories/${id}`,
+      updateList,
+      {
+        headers: { Authorization: `Basic ${token}` },
+      },
+    );
+    console.log(response);
+
+    commit("freshList", updateList);
+  },
+
   async fetchCards({ commit }) {
     const response = await axios.get(
       "http://localhost:8000/wp-json//wp/v2/posts",
@@ -130,7 +136,7 @@ const actions = {
     let response = await axios.post(
       "http://localhost:8000/wp-json//wp/v2/posts",
       title,
-      { headers: { Authorization: `Basic ${tokenY}` } },
+      { headers: { Authorization: `Basic ${token}` } },
     );
     console.log(response.data);
     commit("newCard", response.data);
