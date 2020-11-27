@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-dialog v-model="dialog" min-height="1200" width="600">
-        <template v-slot:activator="{ on, attrs }">
+        <template v-slot:activator="{ on, attrs }" >
             <v-card class="mb-2 cardItem" elevation="2" outlined v-bind="attrs" v-on="on">
             <v-card-text class="px-2 py-2">{{ card.title.rendered }}</v-card-text>
             <v-icon v-if="card.content.rendered" class="ml-2"> {{ icons.mdiPlaylistCheck }}</v-icon>
@@ -36,12 +36,14 @@
                         </div>
 
                         <div>
-                            <v-btn v-bind:class="{none:formDescOn}" v-click-outside="toggleCloseAddDesc" @click="toggleDesc">Add a more Detailed description...</v-btn>
-                                <div v-if="formDescOn">
+                            <v-btn v-bind:class="{none:formDescOn}"  @click="toggleDesc">Add a more Detailed description...</v-btn>
+                                <div v-if="formDescOn" v-click-outside="toggleCloseAddDesc">
                                     <v-form @submit="onSubmitDesc(card)">
                                     <v-card width="250">
                                         <v-textarea 
-                                            class="mr-5 ml-5" 
+                                            class="mr-5 ml-5"
+                                            clearable
+                                            counter
                                             placeholder="Add a more detailed description..." 
                                             v-model="description"></v-textarea>
                                         <v-btn color="green lighten-1"  class="white--text ml-4" type="submit">Save</v-btn>
@@ -120,7 +122,7 @@ export default {
         formDescOn:false,
         icons: { mdiPlaylistCheck, mdiDelete, mdiPencil, mdiArchive, mdiClose },
         focused: false,
-        description: "",
+        description: this.renderDesc(this.card.content.rendered),
         newComment: "",
         editComment: "editing...",
         };
@@ -138,6 +140,11 @@ export default {
         toggleDesc(){
             this.formDescOn = !this.formDescOn
         },
+
+        renderDesc: (description) => {
+        return description.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, "");
+        },
+
         renderComment: (comment) => {
         return comment.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, "");
         },
