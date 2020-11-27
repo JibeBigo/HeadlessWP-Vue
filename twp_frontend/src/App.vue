@@ -1,7 +1,7 @@
 <template>
   <v-app>      
     <NavBar/>
-    <v-main>
+    <v-main class="blue darken-2">
       <router-view/>
     </v-main>
   </v-app>
@@ -20,4 +20,7 @@ export default {
 };
 </script>
 
+<style  scoped>
+
+</style>
 
