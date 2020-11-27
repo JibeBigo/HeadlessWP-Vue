@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import { mdiPlaylistCheck, mdiArchive, mdiClose } from '@mdi/js'
 
 export default {
