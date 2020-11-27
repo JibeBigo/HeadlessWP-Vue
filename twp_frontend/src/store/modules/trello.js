@@ -16,7 +16,6 @@ const actions= {
 
     async fetchListItems({commit}){
         const response = await axios.get('http://localhost:8000/wp-json/wp/v2/categories')
-        console.log(response)
         commit("setListItems", response.data)
     },
 

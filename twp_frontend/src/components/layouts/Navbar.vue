@@ -10,7 +10,7 @@
                 <span>llo</span>
                 </div>
             </v-toolbar-title>
-                  <v-text-field v-model="search" v-on:keyup="searchFilter" cache-items class="mx-3 ml-10" flat hide-no-data hide-details label="Search" solo-inverted></v-text-field>
+                  <v-text-field v-model="search" @:keyup="filteredList" cache-items class="mx-3 ml-10" flat hide-no-data hide-details label="Search" solo-inverted></v-text-field>
              <v-spacer></v-spacer>
              <router-link to="/"><v-btn depressed color="blue darken-3">Home</v-btn></router-link>
              <router-link to="/about"><v-btn depressed color="blue darken-3">About</v-btn></router-link>
@@ -21,36 +21,44 @@
                     </v-card>
                 </div>
         </v-app-bar>
+        <!-- display none /ListItems is use to bind the data from filter function to ListItems -->
+        <ListItems class="ShowNone" v-bind:allListItemsFiltered="filteredList"/>
     </nav>
 </template>
 
 <script>
+import ListItems from "../ListItems"
+import {mapGetters} from "vuex"
 export default {
     name:"NavBar",
 
     data(){
-    return{
+        return{
 
-        isOn:false,
-        search:""
+            isOn:false,
+            search:"",
         }
 
+    },
+    components:{
+        ListItems
     },
 
     methods:{
         change(){
         this.isOn =!this.isOn
-        console.log(this.isOn)
         },
 
-        searchFilter(){
-            console.log(this.search)
-
-            ///Function to get the value from the input//
-            //OK!!
+    },
+    computed:{
+    ...mapGetters(["allListItems"]),
+    
+    filteredList:function(){
+            return this.allListItems.filter(list =>{
+                return list.name.match(this.search)
+            })
         }
-
-    }
+    },
 
 }
 
@@ -70,5 +78,8 @@ export default {
   .container-dropBadge{
        top:	4rem;
   }
+}
+.ShowNone{
+    display:none
 }
 </style>
