@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="d-flex justify-space-between">
         <v-dialog v-model="dialog" min-height="1200" width="600">
         <template v-slot:activator="{ on, attrs }" >
             <v-card class="mb-2 cardItem" elevation="2" outlined v-bind="attrs" v-on="on">
@@ -11,14 +11,14 @@
         <v-card>
         <v-card-title class="headline grey lighten-2">{{ card.title.rendered }}</v-card-title>
 
-        <v-card-subtitle class="mb-2">
-                    in list {{ list.name }}
+        <v-card-subtitle class="mt-1" >
+                    <p id="txtColor">in list {{ list.name }}</p>
                 </v-card-subtitle>
 
-                <v-card-text class="d-flex flex-row-reverse">
+                <v-card-text class="d-flex flex-row-reverse align-center">
                     <div width="30%">
                         <v-list>
-                            <v-list-item>
+                            <v-list-item class="mb-3" id="alignItem">
                                 Actions
                             </v-list-item>
                             <v-list-item>
@@ -30,7 +30,7 @@
                         </v-list>
                     </div>
                     <div width="70%">
-                        <div class="d-flex align-items">
+                        <div class="d-flex align-items mb-3">
                             <v-icon> {{ icons.mdiPlaylistCheck }}</v-icon>
                             <h1 class="ml-1 mb-0">Description</h1>
                         </div>
@@ -44,7 +44,8 @@
                                             class="mr-5 ml-5"
                                             clearable
                                             counter
-                                            placeholder="Add a more detailed description..." 
+                                            placeholder="Add a more detailed description..."
+                                            rows="2"
                                             v-model="description"></v-textarea>
                                         <v-btn color="green lighten-1"  class="white--text ml-4" type="submit">Save</v-btn>
                                         <v-btn @click="toggleDesc" icon>
@@ -103,6 +104,42 @@
             </v-card-actions>
         </v-card>
         </v-dialog>
+
+        <div>
+            <v-card class="mb-2" elevation="2" outlined>
+                <v-btn @click="toggleTitlePost" depressed icon x-small> <!-- v-click-outside="toggleCloseTitleCard" -->
+                    <v-icon> {{ icons.mdiPencil }} </v-icon>
+                </v-btn>
+            </v-card>
+        </div>
+
+        <div v-if="modalTitleCard" class="modalEditTitleCard"> 
+            <v-form @submit="submitNewTitleCard(card)">
+                <v-card>
+                    <v-card-title class="d-flex">
+                        <v-text-field
+                            v-model="newCardTitle"
+                        >
+                        </v-text-field>
+                        <v-btn class="modalCorner" @click="toggleCloseTitleCard" icon>
+                        <v-icon>{{icons.mdiClose}}</v-icon>
+                        </v-btn>
+                    </v-card-title>
+                    
+                        <v-btn class="white--text ml-4 mb-1"  color="green lighten-1" type="submit">Save</v-btn>
+                        <!-- <v-list>
+                        <div class="container-deleteList">
+                            <p class="deleteListAction">Delete List</p>
+                            <v-btn @click="cancelList(list.id)" icon color="red lighten-1">
+                            <v-icon>{{icons.mdiCloseCircleOutline}}</v-icon>
+                            </v-btn>
+                        </div>
+                        </v-list> -->
+                    
+                </v-card>
+            </v-form>
+        </div>
+            
     </div>
 </template>
 
@@ -120,9 +157,12 @@ export default {
         return {
         dialog: false,
         formDescOn:false,
+        formOn: false,
+        modalTitleCard: false,
         icons: { mdiPlaylistCheck, mdiDelete, mdiPencil, mdiArchive, mdiClose },
         focused: false,
         description: this.renderDesc(this.card.content.rendered),
+        newCardTitle: this.card.title.rendered,
         newComment: "",
         editComment: "editing...",
         };
@@ -131,7 +171,7 @@ export default {
         ...mapGetters(["allComments"]),
     },
     methods: {
-        ...mapActions(["addComment", "deleteComment", "deleteCard", "addDescription"]),
+        ...mapActions(["addComment", "deleteComment", "deleteCard", "addDescription", "editCardTitle"]),
         archiveCard(id){
             console.log(id)
             this.deleteCard(id)
@@ -188,6 +228,14 @@ export default {
         this.formDescOn = false;
         },
 
+        toggleCloseTitleCard () {
+            this.modalTitleCard = false;
+        },
+
+        toggleTitlePost () {
+            this.modalTitleCard = !this.modalTitleCard;
+        },
+
         onSubmitDesc(card) {
             event.preventDefault();
             let newDesc = {
@@ -196,6 +244,18 @@ export default {
             };
             this.addDescription(newDesc);
             this.description = "";
+        },
+
+        submitNewTitleCard (card) {
+            console.log(card.id)
+            console.log(card.title)
+            event.preventDefault();
+            let updCardTitle = {
+                id: card.id,
+                title: this.newCardTitle,
+            };
+            this.editCardTitle(updCardTitle);
+
         },
 
         mounted() {
@@ -210,11 +270,29 @@ export default {
 </script>
 
 <style scoped>
+#alignItem {
+    min-height: 0px;
+}
+#txtColor {
+    font-weight: bold;
+    color: #64B5F6;
+    text-decoration: underline;
+}
 .cardItem {
-  min-width: 255px;
+    min-width: 255px;
+}
+.modalCorner {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.modalEditTitleCard {
+    position: absolute;
+    width: 276px;
+    z-index: 1;
 }
 .v-icon:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 </style>
 

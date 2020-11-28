@@ -157,9 +157,22 @@ const actions = {
         },
         );
 
-        console.log(response);
         commit("updateCard", response.data);
-    }
+    },
+
+    async editCardTitle({ commit }, newTitle) {
+        let response = await axios.post(
+        `http://localhost:8000/wp-json/wp/v2/posts/${newTitle.id}`,
+        { "title": newTitle.title },
+        {
+            headers: { Authorization: `Basic ${tokenY}` },
+        },
+        );
+
+        console.log(response);
+        commit("updateCardTitle", response.data);
+    },
+
 };
 
 
@@ -178,6 +191,7 @@ const mutations = {
         (state.comments = state.comments.filter((comment) => comment.id != id)),
     freshList: () => { return true },
     updateCard: (state, newDesc) => state.cards.unshift(newDesc),
+    updateCardTitle: (state, title) => state.cards.unshift(title),
 };
 
 export default {

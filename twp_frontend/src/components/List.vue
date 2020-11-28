@@ -1,6 +1,6 @@
 <template>
     <div class="container-card">
-        <v-card class="mr-2 blue-grey lighten-5" width="272" min-height="120">
+        <v-card class="mr-2 blue-grey lighten-5" width="290" min-height="120">
         <div class="d-flex justify-space-between align-center">
             <v-card-title class="pointer py-0">
             <input
@@ -202,8 +202,8 @@ export default {
  background-color:#ecefe1;
 }
 .updateFocus {
-    background-color: white;
-    border: 2px solid #1e88e5;
+    background-color: #eceff1;
+    border: 2px solid #eceff1;
     border-radius: 2px;
 }
 ::placeholder {
