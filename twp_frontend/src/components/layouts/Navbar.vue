@@ -10,9 +10,10 @@
                 <span>llo</span>
                 </div>
             </v-toolbar-title>
-                  <v-text-field v-model="search" @:keyup="filteredList" cache-items class="mx-3 ml-10" flat hide-no-data hide-details label="Search" solo-inverted></v-text-field>
+                  <v-text-field v-model="search" v-on:keyup="filtered" cache-items class="mx-3 ml-10" flat hide-no-data hide-details label="Search" solo-inverted></v-text-field>
              <v-spacer></v-spacer>
              <router-link to="/"><v-btn depressed color="blue darken-3">Home</v-btn></router-link>
+            <router-link to="/archives"><v-btn depressed color="blue darken-3">Archives</v-btn></router-link>
              <router-link to="/about"><v-btn depressed color="blue darken-3">About</v-btn></router-link>
              <v-btn  icon x-large @click="change"><v-avatar color="primary" size="40">YB</v-avatar></v-btn>
                 <div class="container-dropBadge" v-if="isOn">
@@ -22,26 +23,20 @@
                 </div>
         </v-app-bar>
         <!-- display none /ListItems is use to bind the data from filter function to ListItems -->
-        <ListItems class="ShowNone" v-bind:allListItemsFiltered="filteredList"/>
     </nav>
 </template>
 
 <script>
-import ListItems from "../ListItems"
-import {mapGetters} from "vuex"
 export default {
     name:"NavBar",
 
     data(){
         return{
-
+            
             isOn:false,
             search:"",
         }
 
-    },
-    components:{
-        ListItems
     },
 
     methods:{
@@ -49,17 +44,11 @@ export default {
         this.isOn =!this.isOn
         },
 
-    },
-    computed:{
-    ...mapGetters(["allListItems"]),
-    
-    filteredList:function(){
-            return this.allListItems.filter(list =>{
-                return list.name.match(this.search)
-            })
+        filtered(){
+            console.log(this.search)
         }
-    },
 
+    },
 }
 
 </script>

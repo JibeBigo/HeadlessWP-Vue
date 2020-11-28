@@ -189,8 +189,8 @@ export default {
   height: 25px;
   outline: none;
   text-indent: 5px;
-  border:1px solid #ecefe1;
- background-color:#ecefe1;
+  border:1px solid #eceff1;
+ background-color:#eceff1;
 }
 .updateFocus {
     background-color: white;

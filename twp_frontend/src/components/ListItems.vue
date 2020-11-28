@@ -2,7 +2,7 @@
   <div>
     <div class="container-listCards">
       <div class="card-side-btn" v-for="(list,index) in allListItems" :key="index">
-        <List v-bind:list="list" />
+        <List v-if="list.id != 1" v-bind:list="list" />
       </div>
       <v-btn v-bind:class="{none:formOn}" @click="toggle" v-click-outside="closeToggle" color="blue lighten-2">
         <v-icon size="15">mdi-plus</v-icon>Add another list
@@ -30,9 +30,6 @@ import ClickOutside from "vue-click-outside";
 
 export default {
   name: "ListItems",
-
-  props: ["allListItemsFiltered"],
-
   data() {
     return {
       icons: { mdiClose },

@@ -71,6 +71,7 @@ const actions = {
         const response = await axios.get(
         "http://localhost:8000/wp-json/wp/v2/categories",
         );
+        console.log(response)
         commit("setListItems", response.data);
     },
 
@@ -144,9 +145,9 @@ const actions = {
     async deleteCard({ commit }, id) {
     await axios.delete(`http://localhost:8000/wp-json//wp/v2/posts/${id}?force=true`, {
     headers: { 'Authorization': `Basic ${token}` }
-});
+    });
     commit("removeCard", id)
-},
+    },
 };
 
 const mutations = {
