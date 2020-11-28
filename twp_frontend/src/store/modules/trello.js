@@ -1,20 +1,19 @@
-import axios from "axios";
-const token =
-  "amJzaWx2ZXN0cmVAaG90bWFpbC5mcjpHQlJ3b0FEYmQ5SWlUZnFhell3SSR2Rnc=";
+import axios from "axios"
+const token = "amJzaWx2ZXN0cmVAaG90bWFpbC5mcjpHQlJ3b0FEYmQ5SWlUZnFhell3SSR2Rnc";
 
 const state = {
-  listItems: [],
-  cards: [],
-  user: [],
-  users: [],
-  comments: [],
+    listItems: [],
+    cards: [],
+    user: [],
+    users: [],
+    comments: [],
 };
 
 const getters = {
-  allListItems: (state) => state.listItems,
-  allCards: (state) => state.cards,
-  allUsers: (state) => state.users,
-  allComments: (state) => state.comments,
+    allListItems: (state) => state.listItems,
+    allCards: (state) => state.cards,
+    allUsers: (state) => state.users,
+    allComments: (state) => state.comments,
 };
 
 const actions = {
@@ -22,6 +21,13 @@ const actions = {
     const response = await axios.get(
       "http://localhost:8000/wp-json/wp/v2/comments?_fields=author_name,post,content,date,id",
     );
+    response.data.forEach((comment) => {
+      comment.content.rendered = comment.content.rendered.replace(
+        /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+        "",
+      );
+      comment.edit = false;
+    });
     commit("setComments", response.data);
   },
 
@@ -44,6 +50,18 @@ const actions = {
       },
     );
     commit("removeComment", response.data.previous.id);
+  },
+
+  async editComment({ commit }, comment) {
+    comment.content.raw = comment.content.rendered;
+    const response =await axios.post(
+      `http://localhost:8000/wp-json/wp/v2/comments/${comment.id}`, comment,
+      {
+        headers: { Authorization: `Basic ${token}` },
+      },
+    );
+    console.log(response)
+    commit("updateComment");
   },
 
   async fetchUsers({ commit }) {
@@ -141,25 +159,42 @@ const actions = {
     console.log(response.data);
     commit("newCard", response.data);
   },
+
+  async deleteCard({ commit }, id) {
+    await axios.delete(
+      `http://localhost:8000/wp-json//wp/v2/posts/${id}?force=true`,
+      {
+        headers: { Authorization: `Basic ${token}` },
+      },
+    );
+    commit("removeCard", id);
+  },
 };
 
 const mutations = {
-  setListItems: (state, list) => (state.listItems = list),
-  newList: (state, newList) => state.listItems.push(newList),
-  removeList: (state, id) =>
-    (state.listItems = state.listItems.filter((list) => list.id != id)),
-  setCards: (state, cardItems) => (state.cards = cardItems),
-  newCard: (state, newCard) => state.cards.unshift(newCard),
-  setUsers: (state, users) => (state.users = users),
-  setComments: (state, comments) => (state.comments = comments),
-  newComment: (state, comment) => state.comments.unshift(comment),
-  removeComment: (state, id) =>
-    (state.comments = state.comments.filter((comment) => comment.id != id)),
+    setListItems: (state, list) => (state.listItems = list),
+    newList: (state, newList) => state.listItems.push(newList),
+    removeList: (state, id) =>
+        (state.listItems = state.listItems.filter((list) => list.id != id)),
+    setCards: (state, cardItems) => (state.cards = cardItems),
+    newCard: (state, newCard) => state.cards.unshift(newCard),
+    removeCard:(state,id) => state.cards = state.cards.filter(card => card.id != id),
+    setUsers: (state, users) => (state.users = users),
+    setComments: (state, comments) => (state.comments = comments),
+    newComment: (state, comment) => state.comments.unshift(comment),
+    removeComment: (state, id) =>
+        (state.comments = state.comments.filter((comment) => comment.id != id)),
+    updateComment: (state) => {
+        console.log(state)
+        // let index = state.comments.findIndex((oldComment) => oldComment.id === comment.id);
+        // state.comments[index].content.rendered = comment.content.rendered;
+        // do nothing cause it works
+    }
 };
 
 export default {
-  state,
-  getters,
-  actions,
-  mutations,
+    state,
+    getters,
+    actions,
+    mutations,
 };

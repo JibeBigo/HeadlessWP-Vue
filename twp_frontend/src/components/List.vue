@@ -43,10 +43,9 @@
       <!-- <v-list-cards>SPOT FOR THE COMMENT CARD BODY</v-list-cards> -->
       <div v-for="card in allCards" :key="card.id">
         <v-list-item v-if="card.categories[0] === list.id" class="mx-auto px-2">
-          <CardItems v-bind:card="card" />
+          <CardItems v-bind:card="card" v-bind:list="list" />
         </v-list-item>
       </div>
-
       <div class="addCard">
         <v-btn v-bind:class="{none:formOn}" @click="toggle" depressed>
           <v-icon size="15">mdi-plus</v-icon>Add another card
@@ -61,7 +60,9 @@
                 rows="2"
               ></v-textarea>
               <v-btn color="green lighten-1" type="submit">Add Card</v-btn>
-              <v-btn @click="toggle" icon>X</v-btn>
+              <v-btn @click="toggle" icon>
+                <v-icon>{{icons.mdiClose}}</v-icon>
+              </v-btn>
             </v-card>
           </v-form>
         </div>
@@ -69,7 +70,6 @@
     </v-card>
   </div>
 </template>
-
 <script>
 import { mdiDotsHorizontal, mdiClose, mdiCloseCircleOutline } from "@mdi/js";
 import CardItems from "@/components/CardItems.vue";
@@ -89,11 +89,10 @@ export default {
     };
   },
   components: { CardItems },
-
   methods: {
     ...mapActions(["deleteList", "fetchCards", "addCard", "updateList"]),
     toggleModal() {
-      this.modalList = true;
+      this.modalList = !this.modalList;
     },
     toggleCloseModal() {
       this.modalList = false;
@@ -101,7 +100,6 @@ export default {
     toggle() {
       this.formOn = !this.formOn;
     },
-
     //function to open input when cliking
     inputStyle() {
       this.input = true;
@@ -110,12 +108,10 @@ export default {
     onCloseInput() {
       this.input = false;
     },
-
     cancelList(id) {
       console.log(id);
       this.deleteList(id);
     },
-
     onSubmit(event) {
       event.preventDefault();
       let newCard = {
@@ -128,7 +124,6 @@ export default {
       this.addCard(newCard);
       this.cardTitle = "";
     },
-
     updateTitleList(list) {
       event.preventDefault();
       const id = list.id;
@@ -158,7 +153,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .addCard {
   display: flex;
@@ -168,7 +162,6 @@ export default {
 }
 .container-card {
   display: flex;
-  height: fit-content;
 }
 .modal {
   position: absolute;
@@ -195,18 +188,12 @@ export default {
   height: 25px;
   outline: none;
   text-indent: 5px;
-  border: 1px solid #ecefe1;
-  background-color: #ecefe1;
+  border: 1px solid #eceff1;
+  background-color: #eceff1;
 }
 .updateFocus {
+  background-color: white;
   border: 2px solid #1e88e5;
   border-radius: 2px;
-  border: 1px solid black;
-  background-color: white;
-}
-::placeholder {
-  font-size: 15px;
-  padding-bottom: 10px;
-  color: black;
 }
 </style>

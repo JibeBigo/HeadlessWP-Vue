@@ -10,6 +10,53 @@
       <v-card>
         <v-card-title class="headline grey lighten-2">{{ card.title.rendered }}</v-card-title>
 
+        <v-card-subtitle class="mb-2">in list {{ list.name }}</v-card-subtitle>
+
+        <v-card-text class="d-flex flex-row-reverse">
+          <div width="30%">
+            <v-list>
+              <v-list-item>Actions</v-list-item>
+              <v-list-item>
+                <v-btn @click="archiveCard(card.id)" class="d-flex align-items">
+                  <div>
+                    <v-icon>{{ icons.mdiArchive }}</v-icon>
+                  </div>
+                  <div>
+                    <p class="ml-1 mb-0">Archive card</p>
+                  </div>
+                </v-btn>
+              </v-list-item>
+            </v-list>
+          </div>
+          <div width="70%">
+            <div class="d-flex align-items">
+              <v-icon>{{ icons.mdiPlaylistCheck }}</v-icon>
+              <h1 class="ml-1 mb-0">Description</h1>
+            </div>
+
+            <div>
+              <v-btn
+                v-bind:class="{none:formDescOn}"
+                @click="toggleDesc"
+              >Add a more Detailed description...</v-btn>
+              <div v-if="formDescOn">
+                <v-form @submit="onSubmitDesc">
+                  <v-card width="250">
+                    <v-textarea
+                      class="mr-5 ml-5"
+                      placeholder="Add a more detailed description..."
+                      v-model="description"
+                    ></v-textarea>
+                    <v-btn color="green lighten-1" class="white--text ml-4" type="submit">Save</v-btn>
+                    <v-btn @click="toggleDesc" icon>
+                      <v-icon>{{icons.mdiClose}}</v-icon>
+                    </v-btn>
+                  </v-card>
+                </v-form>
+              </div>
+            </div>
+          </div>
+        </v-card-text>
         <v-card-text class="mt-5">{{ renderComment(card.content.rendered) }}</v-card-text>
 
         <v-card-text class="pl-4 pb-0">
@@ -41,13 +88,27 @@
               <span>{{ timeAgo(Date.parse(comment.date)) }}</span>
               <br />
               <v-card class="pa-2 ml-10">
-                <span>{{ renderComment(comment.content.rendered) }}</span>
+                <span v-show="!comment.edit">{{ renderComment(comment.content.rendered) }}</span>
+                <input
+                  type="text"
+                  ref="input"
+                  v-model="comment.content.rendered"
+                  v-show="comment.edit"
+                  class="edit-comment-input"
+                />
+                <v-btn color="success" class="float-right ml-1" v-show="comment.edit" @click="saveEdit(this, comment)">Save</v-btn>
                 <v-icon
                   class="float-right ml-1"
                   color="red lighten-1"
+                  v-show="!comment.edit"
                   @click="deleteComment(comment.id)"
                 >{{ icons.mdiDelete }}</v-icon>
-                <v-icon class="float-right" color="primary">{{ icons.mdiPencil }}</v-icon>
+                <v-icon
+                  class="float-right"
+                  color="primary"
+                  v-show="!comment.edit"
+                  @click="toggleEdit(this, comment)"
+                >{{ icons.mdiPencil }}</v-icon>
               </v-card>
             </div>
           </div>
@@ -62,27 +123,41 @@
 </template>
 
 <script>
-import { mdiPlaylistCheck, mdiDelete, mdiPencil } from "@mdi/js";
+import {
+  mdiPlaylistCheck,
+  mdiArchive,
+  mdiClose,
+  mdiDelete,
+  mdiPencil,
+} from "@mdi/js";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  props: ["card"],
+  props: ["card", "list"],
   name: "CardItems",
 
   data() {
     return {
       dialog: false,
-      icons: { mdiPlaylistCheck, mdiDelete, mdiPencil },
+      formDescOn: false,
+      icons: { mdiPlaylistCheck, mdiDelete, mdiPencil, mdiArchive, mdiClose },
       focused: false,
       newComment: "",
-      editComment: "editing..."
     };
   },
   computed: {
     ...mapGetters(["allComments"]),
   },
   methods: {
-    ...mapActions(["addComment", "deleteComment"]),
+    ...mapActions(["addComment", "deleteComment", "editComment", "deleteCard"]),
+    archiveCard(id) {
+      console.log(id);
+      this.deleteCard(id);
+    },
+
+    toggleDesc() {
+      this.formDescOn = !this.formDescOn;
+    },
     renderComment: (comment) => {
       return comment.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, "");
     },
@@ -94,6 +169,16 @@ export default {
       };
       this.addComment(comment);
       this.newComment = "";
+    },
+    toggleEdit: function (ev, comment) {
+      comment.edit = !comment.edit;
+      //   if (comment.edit) {
+      //     ev.$$.input.focus();
+      //   }
+    },
+    saveEdit: function (ev, comment) {
+      this.toggleEdit(ev, comment);
+      this.editComment(comment);
     },
     timeAgo: (date) => {
       var seconds = Math.floor((new Date() - date) / 1000);
@@ -131,6 +216,13 @@ export default {
 }
 .v-icon:hover {
   cursor: pointer;
+}
+.edit-comment-input {
+  background-color: white;
+  border: 2px solid #1e88e5;
+  border-radius: 2px;
+  width: 420px;
+  height: 38px;
 }
 </style>
 
