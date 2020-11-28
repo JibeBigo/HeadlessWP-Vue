@@ -67,7 +67,7 @@ export default {
       };
       this.title = "";
       this.addList(newList);
-      console.log(newList);
+      console.log(newList,"newList");
     },
     submit() {
       event.preventDefault();

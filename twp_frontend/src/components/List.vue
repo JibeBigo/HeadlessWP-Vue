@@ -121,7 +121,7 @@ export default {
             content: "",
             categories: this.list.id,
         };
-        console.log(newCard);
+        console.log(newCard,"newCard");
         this.addCard(newCard);
         this.cardTitle = "";
         },

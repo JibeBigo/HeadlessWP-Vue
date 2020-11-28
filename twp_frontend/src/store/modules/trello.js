@@ -71,7 +71,6 @@ const actions = {
         const response = await axios.get(
         "http://localhost:8000/wp-json/wp/v2/categories",
         );
-        console.log(response)
         commit("setListItems", response.data);
     },
 
@@ -81,15 +80,7 @@ const actions = {
         .post("http://localhost:8000/wp-json/wp/v2/categories", newList, {
             headers: { Authorization: `Basic ${token}` },
         })
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-        console.log(response);
-
-        commit("newList", newList);
+        commit("newList", response.data);
     },
 
     async deleteList({ commit }, id) {
@@ -100,13 +91,6 @@ const actions = {
             headers: { Authorization: `Basic ${token}` },
             },
         )
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-
         commit("removeList", id);
     },
 
@@ -129,7 +113,6 @@ const actions = {
         const response = await axios.get(
         "http://localhost:8000/wp-json//wp/v2/posts",
         );
-        console.log(response.data)
         commit("setCards", response.data);
     },
 

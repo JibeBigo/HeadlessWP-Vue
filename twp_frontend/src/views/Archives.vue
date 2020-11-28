@@ -1,8 +1,7 @@
 <template>
   <div>
       <h1 class="title-archives">Archives</h1>
-      <div class="container-tab" v-for="list in allListItems" :key="list.id"> 
-          <div v-if="list.id === 1 ">
+      <div class="container-tab" v-for="(list,index) in showList" :key="index"> 
           <v-simple-table fixed-header>
             <template v-slot:default>
                     <thead>
@@ -13,29 +12,41 @@
                         </tr>
                     </thead>
                 <tbody>
-                    <tr v-for="(card,index) in allCards" :key="index">
-                        <td v-if="list.id == card.categories[0]">{{card.title.rendered}}</td>
-                        <td v-else>No result found</td>
-                        <td v-if="list.id == card.categories[0]">{{card.date}}</td>
-                        <td v-else>No result found</td>
-                        <td v-if="list.id == card.categories[0]"><v-btn  @click="removeCard(card.id)" color="red">X</v-btn></td>
-                        <td v-else>No result found</td>
+                    <tr v-for="(card,index) in showCard" :key="index">
+                            <td>{{card.title.rendered}}</td>
+                            <td>{{card.date}}</td>
+                            <td><v-btn  @click="removeCard(card.id)" color="red">Delete</v-btn></td>
                     </tr>
                 </tbody>
                 </template>
             </v-simple-table>
-        </div>
       </div>
   </div>
 </template>
 
 <script>
 import {mapGetters,mapActions} from "vuex"
+import {mdiClose} from "@mdi/js";
 export default {
     name:"Archives",
 
+    icons: {mdiClose},
+
     computed:{
-        ...mapGetters(["allListItems","allCards"])
+        ...mapGetters(["allListItems","allCards"]),
+        
+        showList(){
+           return this.allListItems.filter(list =>{
+                return list.id == 1
+            })
+        },
+
+        showCard(){
+            return this.allCards.filter(card =>{
+                return this.showList[0].id == card.categories[0]  
+               
+            })
+        }
     },
 
     methods:{
