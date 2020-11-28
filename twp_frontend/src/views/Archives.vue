@@ -15,8 +15,11 @@
                 <tbody>
                     <tr v-for="(card,index) in allCards" :key="index">
                         <td v-if="list.id == card.categories[0]">{{card.title.rendered}}</td>
+                        <td v-else>No result found</td>
                         <td v-if="list.id == card.categories[0]">{{card.date}}</td>
+                        <td v-else>No result found</td>
                         <td v-if="list.id == card.categories[0]"><v-btn  @click="removeCard(card.id)" color="red">X</v-btn></td>
+                        <td v-else>No result found</td>
                     </tr>
                 </tbody>
                 </template>
