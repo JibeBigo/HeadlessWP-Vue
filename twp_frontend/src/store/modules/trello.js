@@ -129,6 +129,7 @@ const actions = {
         const response = await axios.get(
         "http://localhost:8000/wp-json//wp/v2/posts",
         );
+        console.log(response.data)
         commit("setCards", response.data);
     },
 
