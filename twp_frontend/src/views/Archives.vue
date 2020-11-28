@@ -15,14 +15,14 @@
                         <tr v-for="(card,index) in showCard" :key="index">
                             <td>{{card.title.rendered}}</td>
                             <td>{{card.date}}</td>
-                            <td><v-btn  @click="removeCard(card.id)" color="red">Delete</v-btn></td>
+                            <td><v-btn  @click="removeCard(card.id)" color="error">Delete Archives</v-btn></td>
                         </tr>
                 </tbody>
                 <tbody v-else>
                     <tr>
-                        <td>No Archives Found</td>
-                        <td>No Archives Found</td>
-                        <td>No Archives Found</td>
+                        <td><v-icon color="yellow darken-2">{{icons.mdiAlertBoxOutline}}</v-icon> No Archives Found</td>
+                        <td><v-icon color="yellow darken-2">{{icons.mdiAlertBoxOutline}}</v-icon> No Archives Found</td>
+                        <td><v-icon color="yellow darken-2">{{icons.mdiAlertBoxOutline}}</v-icon> No Archives Found</td>
                     </tr>
                 </tbody>
                 </template>
@@ -33,11 +33,15 @@
 
 <script>
 import {mapGetters,mapActions} from "vuex"
-import {mdiClose} from "@mdi/js";
+import { mdiAlertBoxOutline } from '@mdi/js';
 export default {
     name:"Archives",
 
-    icons: {mdiClose},
+    data(){
+        return{
+             icons:{mdiAlertBoxOutline}, 
+        }
+    },
 
     computed:{
         ...mapGetters(["allListItems","allCards"]),
