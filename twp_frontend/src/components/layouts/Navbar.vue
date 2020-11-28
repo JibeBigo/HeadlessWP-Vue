@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
     name:"NavBar",
 
@@ -49,6 +50,9 @@ export default {
         }
 
     },
+    computed:{
+        ...mapGetters(["allListItems"])
+    }
 }
 
 </script>
