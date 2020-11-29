@@ -1,21 +1,36 @@
 <template>
-  <div>
+  <div class="d-flex justify-space-between">
     <v-dialog v-model="dialog" min-height="1200" width="600">
       <template v-slot:activator="{ on, attrs }">
-          <v-card class="mb-2 cardItem" elevation="2" outlined v-bind="attrs" v-on="on">
-            <v-card-text class="px-2 py-2">{{ card.title.rendered }}</v-card-text>
-          </v-card>
+        <v-card class="mb-2 cardItem" elevation="2" outlined v-bind="attrs" v-on="on">
+          <v-card-text class="px-2 pt-2 pb-0">{{ newCardTitle }}</v-card-text>
+          <v-icon v-if="card.content.rendered" class="ml-2">{{ icons.mdiPlaylistCheck }}</v-icon>
+        </v-card>
       </template>
 
       <v-card>
-        <v-card-title class="headline grey lighten-2">{{ card.title.rendered }}</v-card-title>
+        <v-card-title class="headline grey lighten-2">
+          <input
+            v-on:click="inputStyle"
+            v-on:blur="onCloseInput"
+            class="textarea-update-card-title"
+            ref="input"
+            type="text"
+            v-bind:class="{updateFocusCardTitle:input}"
+            v-on:keyup.enter="submitNewTitleCardInModal(card)"
+            v-model="newCardTitle"
+          />
+          <!-- {{ card.title.rendered }} -->
+        </v-card-title>
 
-        <v-card-subtitle class="mb-2">in list {{ list.name }}</v-card-subtitle>
+        <v-card-subtitle class="mt-1">
+          <p id="txtColor">in list {{ list.name }}</p>
+        </v-card-subtitle>
 
-        <v-card-text class="d-flex flex-row-reverse">
+        <v-card-text class="d-flex flex-row-reverse align-center">
           <div width="30%">
             <v-list>
-              <v-list-item>Actions</v-list-item>
+              <v-list-item class="mb-3" id="alignItem">Actions</v-list-item>
               <v-list-item>
                 <v-btn @click="archiveCard(card.id)" class="d-flex align-items">
                   <div>
@@ -29,7 +44,7 @@
             </v-list>
           </div>
           <div width="70%">
-            <div class="d-flex align-items">
+            <div class="d-flex align-items mb-3">
               <v-icon>{{ icons.mdiPlaylistCheck }}</v-icon>
               <h1 class="ml-1 mb-0">Description</h1>
             </div>
@@ -39,12 +54,15 @@
                 v-bind:class="{none:formDescOn}"
                 @click="toggleDesc"
               >Add a more Detailed description...</v-btn>
-              <div v-if="formDescOn">
-                <v-form @submit="onSubmitDesc">
+              <div v-if="formDescOn" v-click-outside="toggleCloseAddDesc">
+                <v-form @submit="onSubmitDesc(card)">
                   <v-card width="250">
                     <v-textarea
                       class="mr-5 ml-5"
+                      clearable
+                      counter
                       placeholder="Add a more detailed description..."
+                      rows="2"
                       v-model="description"
                     ></v-textarea>
                     <v-btn color="green lighten-1" class="white--text ml-4" type="submit">Save</v-btn>
@@ -57,7 +75,7 @@
             </div>
           </div>
         </v-card-text>
-        <v-card-text class="mt-5">{{ renderContent(card.content.rendered) }}</v-card-text>
+        <v-card-text class="mt-5">{{ renderComment(description) }}</v-card-text>
 
         <v-card-text class="pl-4 pb-0">
           <span>
@@ -99,13 +117,13 @@
                 <v-icon
                   class="float-right mt-1 ml-1"
                   v-show="comment.edit"
-                  @click="toggleEdit(this, comment)"
+                  @click="toggleEditComment(this, comment)"
                 >{{icons.mdiClose}}</v-icon>
                 <v-btn
                   color="success"
                   class="float-right ml-1"
                   v-show="comment.edit"
-                  @click="saveEdit(this, comment)"
+                  @click="saveEditComment(this, comment)"
                 >Save</v-btn>
                 <v-icon
                   class="float-right ml-1"
@@ -117,7 +135,7 @@
                   class="float-right"
                   color="primary"
                   v-show="!comment.edit"
-                  @click="toggleEdit(this, comment)"
+                  @click="toggleEditComment(this, comment)"
                 >{{ icons.mdiPencil }}</v-icon>
               </v-card>
             </div>
@@ -129,6 +147,30 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <div>
+      <v-card class="mb-2" elevation="2" outlined>
+        <v-btn @click="toggleTitlePost" depressed icon x-small>
+          <!-- v-click-outside="toggleCloseTitleCard" -->
+          <v-icon>{{ icons.mdiPencil }}</v-icon>
+        </v-btn>
+      </v-card>
+    </div>
+
+    <div v-if="modalTitleCard" class="modalEditTitleCard">
+      <v-form @submit="submitNewTitleCard(card)">
+        <v-card>
+          <v-card-title class="d-flex">
+            <v-text-field v-model="newCardTitle"></v-text-field>
+            <v-btn @click="toggleTitlePost" class="modalCorner" icon>
+              <!-- @click="toggleCloseTitleCard" -->
+              <v-icon>{{icons.mdiClose}}</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-btn class="white--text ml-4 mb-1" color="green lighten-1" type="submit">Save</v-btn>
+        </v-card>
+      </v-form>
+    </div>
   </div>
 </template>
 
@@ -141,6 +183,7 @@ import {
   mdiPencil,
 } from "@mdi/js";
 import { mapGetters, mapActions } from "vuex";
+// import ClickOutside from "vue-click-outside";
 
 export default {
   props: ["card", "list"],
@@ -150,25 +193,41 @@ export default {
     return {
       dialog: false,
       formDescOn: false,
+      formOn: false,
+      modalTitleCard: false,
       icons: { mdiPlaylistCheck, mdiDelete, mdiPencil, mdiArchive, mdiClose },
       focused: false,
+      description: this.renderDesc(this.card.content.rendered),
+      newCardTitle: this.card.title.rendered,
       newComment: "",
+      input: false,
     };
   },
   computed: {
     ...mapGetters(["allComments"]),
   },
   methods: {
-    ...mapActions(["addComment", "deleteComment", "editComment", "deleteCard"]),
+    ...mapActions([
+      "addComment",
+      "deleteComment",
+      "deleteCard",
+      "addDescription",
+      "editCardTitle",
+      "editCardTitleInModal",
+    ]),
     archiveCard(id) {
-      console.log(id);
       this.deleteCard(id);
     },
 
     toggleDesc() {
       this.formDescOn = !this.formDescOn;
     },
-    renderContent: (comment) => {
+
+    renderDesc: (description) => {
+      return description.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, "");
+    },
+
+    renderComment: (comment) => {
       return comment.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, "");
     },
     submitComment: function () {
@@ -180,14 +239,11 @@ export default {
       this.addComment(comment);
       this.newComment = "";
     },
-    toggleEdit: function (ev, comment) {
+    toggleEditComment: function (ev, comment) {
       comment.edit = !comment.edit;
-      //   if (comment.edit) {
-      //     ev.$$.input.focus();
-      //   }
     },
-    saveEdit: function (ev, comment) {
-      this.toggleEdit(ev, comment);
+    saveEditComment: function (ev, comment) {
+      this.toggleEditComment(ev, comment);
       this.editComment(comment);
     },
     timeAgo: (date) => {
@@ -216,13 +272,105 @@ export default {
       if (Math.floor(seconds) < 30) return "just now";
       else return Math.floor(seconds) + " seconds ago";
     },
+
+    toggleCloseAddDesc() {
+      this.formDescOn = false;
+    },
+
+    toggleCloseTitleCard() {
+      this.modalTitleCard = false;
+    },
+
+    toggleTitlePost() {
+      this.modalTitleCard = !this.modalTitleCard;
+    },
+
+    onSubmitDesc(card) {
+      event.preventDefault();
+      let newDesc = {
+        id: card.id,
+        content: this.description,
+      };
+      this.addDescription(newDesc);
+      this.toggleDesc();
+    },
+
+    submitNewTitleCard(card) {
+      console.log(card.id);
+      console.log(card.title);
+      event.preventDefault();
+      let updCardTitle = {
+        id: card.id,
+        title: this.newCardTitle,
+      };
+      this.editCardTitle(updCardTitle);
+      this.toggleTitlePost();
+    },
+
+    //function to open input when cliking
+    inputStyle() {
+      this.input = true;
+    },
+
+    //function to close input when clicking outside
+    onCloseInput() {
+      this.input = false;
+    },
+
+    submitNewTitleCardInModal(card) {
+      event.preventDefault();
+      let updCardTitleInModal = {
+        id: card.id,
+        title: this.newCardTitle,
+      };
+      this.editCardTitleInModal(updCardTitleInModal);
+    },
+
+    // mounted() {
+    //     this.popupItem = this.$el;
+    // },
+
+    // directives: {
+    //     ClickOutside,
+    // },
   },
 };
 </script>
 
 <style scoped>
+#alignItem {
+  min-height: 0px;
+}
+#txtColor {
+  font-weight: bold;
+  color: #64b5f6;
+  text-decoration: underline;
+}
 .cardItem {
   min-width: 255px;
+}
+.modalCorner {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.modalEditTitleCard {
+  position: absolute;
+  width: 276px;
+  z-index: 1;
+}
+.textarea-update-card-title {
+  width: 100%;
+  height: 30px;
+  outline: none;
+  text-indent: 5px;
+  border: 1px solid #e0e0e0;
+  background-color: #e0e0e0;
+}
+.updateFocusCardTitle {
+  background-color: #e0e0e0;
+  border: 2px solid #e0e0e0;
+  border-radius: 2px;
 }
 .v-icon:hover {
   cursor: pointer;

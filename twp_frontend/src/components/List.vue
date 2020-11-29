@@ -1,6 +1,6 @@
 <template>
   <div class="container-card">
-    <v-card class="mr-2 blue-grey lighten-5" width="272" min-height="100">
+    <v-card class="mr-2 blue-grey lighten-5" width="290" min-height="100">
       <div class="d-flex justify-space-between align-center">
         <v-card-title class="pointer py-0">
           <input
@@ -205,6 +205,10 @@ export default {
   border-radius: 2px;
 }
 .none{
+    display: none;
+}
+
+.none {
     display: none;
 }
 </style>

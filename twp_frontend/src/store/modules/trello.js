@@ -159,7 +159,45 @@ const actions = {
     );
     commit("removeCard", id);
   },
+  async addDescription({ commit }, description) {
+        const response = await axios.post(
+        `http://localhost:8000/wp-json/wp/v2/posts/${description.id}`,
+        description,
+        {
+            headers: { Authorization: `Basic ${token}` },
+        },
+        );
+        console.log(response)
+        commit("updateCard", response.data);
+    },
+
+    async editCardTitle({ commit }, newTitle) {
+        let response = await axios.post(
+        `http://localhost:8000/wp-json/wp/v2/posts/${newTitle.id}`,
+        newTitle,
+        {
+            headers: { Authorization: `Basic ${token}` },
+        },
+        );
+
+        console.log(response);
+        commit("updateCardTitle", response.data);
+    },
+
+    async editCardTitleInModal({ commit }, updateNewTitle) {
+        let response = await axios.post(
+        `http://localhost:8000/wp-json/wp/v2/posts/${updateNewTitle.id}`,
+        updateNewTitle,
+        {
+            headers: { Authorization: `Basic ${token}` },
+        },
+        );
+        console.log(response);
+
+        commit("updateCardTitleInModal", response.data);
+    },
 };
+
 
 const mutations = {
     setListItems: (state, list) => (state.listItems = list),
@@ -178,7 +216,12 @@ const mutations = {
         // do nothing cause it works
         // let index = state.comments.findIndex((oldComment) => oldComment.id === comment.id);
         // state.comments[index].content.rendered = comment.content.rendered;
-    }
+    },
+    freshList: () => { return true },
+    updateCard: (state) => console.log(state),
+    updateCardTitle: (state) => console.log(state),
+    updateCardTitleInModal: (state) => console.log(state),
+
 };
 
 export default {
