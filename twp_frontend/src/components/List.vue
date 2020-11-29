@@ -47,7 +47,12 @@
         </v-list-item>
       </div>
       <div class="addCard">
-        <v-btn v-bind:class="{none:formOn}" @click="toggle" depressed>
+        <v-btn
+          v-bind:class="{none:formOn}"
+          @click="toggle"
+          v-click-outside="toggleCloseAddCard"
+          depressed
+        >
           <v-icon size="15">mdi-plus</v-icon>Add another card
         </v-btn>
         <div v-if="formOn">
@@ -59,8 +64,8 @@
                 placeholder="Enter a title for this card..."
                 rows="2"
               ></v-textarea>
-              <v-btn color="green lighten-1" type="submit">Add Card</v-btn>
-              <v-btn @click="toggle" icon>
+              <v-btn class="ml-4 white--text mb-2" color="green lighten-1" type="submit">Add Card</v-btn>
+              <v-btn class="mb-2" @click="toggle" icon>
                 <v-icon>{{icons.mdiClose}}</v-icon>
               </v-btn>
             </v-card>
@@ -99,6 +104,9 @@ export default {
     },
     toggle() {
       this.formOn = !this.formOn;
+    },
+    toggleCloseAddCard() {
+      this.formOn = false;
     },
     //function to open input when cliking
     inputStyle() {
@@ -195,5 +203,8 @@ export default {
   background-color: white;
   border: 2px solid #1e88e5;
   border-radius: 2px;
+}
+.none{
+    display: none;
 }
 </style>

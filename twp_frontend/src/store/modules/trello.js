@@ -104,15 +104,7 @@ const actions = {
       .post("http://localhost:8000/wp-json/wp/v2/categories", newList, {
         headers: { Authorization: `Basic ${token}` },
       })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    console.log(response);
-
-    commit("newList", newList);
+    commit("newList", response.data);
   },
 
   async deleteList({ commit }, id) {
@@ -123,13 +115,6 @@ const actions = {
           headers: { Authorization: `Basic ${token}` },
         },
       )
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
     commit("removeList", id);
   },
 

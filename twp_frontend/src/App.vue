@@ -2,7 +2,7 @@
   <v-app>      
     <NavBar/>
     <v-main class="blue darken-2">
-      <router-view/>
+    <router-view/>
     </v-main>
   </v-app>
 </template>

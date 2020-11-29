@@ -2,17 +2,17 @@
   <div>
     <div class="container-listCards">
       <div class="card-side-btn" v-for="(list,index) in allListItems" :key="index">
-        <List v-bind:list="list" />
+        <List v-if="list.id != 1" v-bind:list="list" />
       </div>
-      <v-btn v-bind:class="{none:formOn}" @click="toggle" color="blue lighten-2">
+      <v-btn v-bind:class="{none:formOn}" @click="toggle" v-click-outside="closeToggle" color="blue lighten-2">
         <v-icon size="15">mdi-plus</v-icon>Add another list
       </v-btn>
       <div class="modal" v-if="formOn">
         <v-form @submit="onSubmit">
           <v-card width="250">
             <v-text-field class="mr-5 ml-5" placeholder="Enter list title..." v-model="title"></v-text-field>
-            <v-btn color="green lighten-1" class="white--text ml-4" type="submit">Add List</v-btn>
-            <v-btn @click="toggle" icon>
+            <v-btn color="green lighten-1" class="white--text ml-4 mb-2" type="submit">Add List</v-btn>
+            <v-btn class="mb-2" @click="toggle" icon>
               <v-icon>{{icons.mdiClose}}</v-icon>
             </v-btn>
           </v-card>
@@ -26,12 +26,10 @@
 import { mapGetters, mapActions } from "vuex";
 import List from "../components/List";
 import { mdiClose } from "@mdi/js";
+import ClickOutside from "vue-click-outside";
 
 export default {
   name: "ListItems",
-
-  props: ["allListItemsFiltered"],
-
   data() {
     return {
       icons: { mdiClose },
@@ -54,6 +52,9 @@ export default {
     toggle() {
       this.formOn = !this.formOn;
     },
+    closeToggle(){
+      this.formOn = false;
+    },
     onSubmit() {
       event.preventDefault();
       console.log(this.title);
@@ -66,7 +67,7 @@ export default {
       };
       this.title = "";
       this.addList(newList);
-      console.log(newList);
+      console.log(newList,"newList");
     },
     submit() {
       event.preventDefault();
@@ -78,6 +79,12 @@ export default {
     this.fetchListItems();
     this.fetchComments();
   },
+  mounted() {
+        this.popupItem = this.$el;
+    },
+  directives: {
+        ClickOutside,
+    },
 };
 </script>
 
