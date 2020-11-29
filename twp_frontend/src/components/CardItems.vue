@@ -2,9 +2,9 @@
   <div>
     <v-dialog v-model="dialog" min-height="1200" width="600">
       <template v-slot:activator="{ on, attrs }">
-        <v-card class="mb-2 cardItem" elevation="2" outlined v-bind="attrs" v-on="on">
-          <v-card-text class="px-2 py-2">{{ card.title.rendered }}</v-card-text>
-        </v-card>
+          <v-card class="mb-2 cardItem" elevation="2" outlined v-bind="attrs" v-on="on">
+            <v-card-text class="px-2 py-2">{{ card.title.rendered }}</v-card-text>
+          </v-card>
       </template>
 
       <v-card>
@@ -57,7 +57,7 @@
             </div>
           </div>
         </v-card-text>
-        <v-card-text class="mt-5">{{ renderComment(card.content.rendered) }}</v-card-text>
+        <v-card-text class="mt-5">{{ renderContent(card.content.rendered) }}</v-card-text>
 
         <v-card-text class="pl-4 pb-0">
           <span>
@@ -88,15 +88,25 @@
               <span>{{ timeAgo(Date.parse(comment.date)) }}</span>
               <br />
               <v-card class="pa-2 ml-10">
-                <span v-show="!comment.edit">{{ renderComment(comment.content.rendered) }}</span>
+                <span v-show="!comment.edit">{{ comment.content.rendered }}</span>
                 <input
                   type="text"
                   ref="input"
                   v-model="comment.content.rendered"
                   v-show="comment.edit"
-                  class="edit-comment-input"
+                  class="edit-comment-input pl-2"
                 />
-                <v-btn color="success" class="float-right ml-1" v-show="comment.edit" @click="saveEdit(this, comment)">Save</v-btn>
+                <v-icon
+                  class="float-right mt-1 ml-1"
+                  v-show="comment.edit"
+                  @click="toggleEdit(this, comment)"
+                >{{icons.mdiClose}}</v-icon>
+                <v-btn
+                  color="success"
+                  class="float-right ml-1"
+                  v-show="comment.edit"
+                  @click="saveEdit(this, comment)"
+                >Save</v-btn>
                 <v-icon
                   class="float-right ml-1"
                   color="red lighten-1"
@@ -158,7 +168,7 @@ export default {
     toggleDesc() {
       this.formDescOn = !this.formDescOn;
     },
-    renderComment: (comment) => {
+    renderContent: (comment) => {
       return comment.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, "");
     },
     submitComment: function () {
@@ -221,7 +231,7 @@ export default {
   background-color: white;
   border: 2px solid #1e88e5;
   border-radius: 2px;
-  width: 420px;
+  width: 390px;
   height: 38px;
 }
 </style>

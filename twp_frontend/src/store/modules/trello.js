@@ -39,6 +39,11 @@ const actions = {
         headers: { Authorization: `Basic ${token}` },
       },
     );
+    response.data.content.rendered = response.data.content.rendered.replace(
+      /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+      "",
+    );
+    response.data.edit = false;
     commit("newComment", response.data);
   },
 
@@ -184,11 +189,10 @@ const mutations = {
     newComment: (state, comment) => state.comments.unshift(comment),
     removeComment: (state, id) =>
         (state.comments = state.comments.filter((comment) => comment.id != id)),
-    updateComment: (state) => {
-        console.log(state)
+    updateComment: () => {
+        // do nothing cause it works
         // let index = state.comments.findIndex((oldComment) => oldComment.id === comment.id);
         // state.comments[index].content.rendered = comment.content.rendered;
-        // do nothing cause it works
     }
 };
 
