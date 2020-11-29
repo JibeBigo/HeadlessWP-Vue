@@ -149,21 +149,21 @@ const actions = {
     },
 
     async addDescription({ commit }, description) {
-        let response = await axios.post(
+        const response = await axios.post(
         `http://localhost:8000/wp-json/wp/v2/posts/${description.id}`,
         description,
         {
             headers: { Authorization: `Basic ${tokenY}` },
         },
         );
-
+        console.log(response)
         commit("updateCard", response.data);
     },
 
     async editCardTitle({ commit }, newTitle) {
         let response = await axios.post(
         `http://localhost:8000/wp-json/wp/v2/posts/${newTitle.id}`,
-        { "title": newTitle.title },
+        newTitle,
         {
             headers: { Authorization: `Basic ${tokenY}` },
         },
@@ -172,6 +172,20 @@ const actions = {
         console.log(response);
         commit("updateCardTitle", response.data);
     },
+
+    async editCardTitleInModal({ commit }, updateNewTitle) {
+        let response = await axios.post(
+        `http://localhost:8000/wp-json/wp/v2/posts/${updateNewTitle.id}`,
+        updateNewTitle,
+        {
+            headers: { Authorization: `Basic ${tokenY}` },
+        },
+        );
+        console.log(response);
+
+        commit("updateCardTitleInModal", response.data);
+    },
+
 
 };
 
@@ -190,8 +204,10 @@ const mutations = {
     removeComment: (state, id) =>
         (state.comments = state.comments.filter((comment) => comment.id != id)),
     freshList: () => { return true },
-    updateCard: (state, newDesc) => state.cards.unshift(newDesc),
-    updateCardTitle: (state, title) => state.cards.unshift(title),
+    updateCard: (state) => console.log(state),
+    updateCardTitle: (state) => console.log(state),
+    updateCardTitleInModal: (state) => console.log(state),
+
 };
 
 export default {
